@@ -1,0 +1,9 @@
+@import './scss_global/scss-common';
+
+$dir-now: rtl;
+
+$forward : right;
+$opposite : left;
+
+@import 'scss/neo-qled';
+@import 'scss/neo-qled02';
