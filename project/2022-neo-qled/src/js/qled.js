@@ -80,7 +80,7 @@
                         });
                     }
                 });
-                
+
             },
             PAUSE: function (__el, __target, __time) {
                 if (document.getElementsByTagName('html')[0].className.indexOf('vd-low') > -1) return false;
@@ -102,7 +102,7 @@
                         });
                     }
                 });
-                
+
             },
             EVENT: function () {
                 const __vdVideoPlayBtn = document.querySelectorAll('.vd-btn-control');
@@ -130,7 +130,7 @@
             }
         },
         ROUND_TWO: function (__num) {
-            return +(Math.round(__num + "e+2")  + "e-2");
+            return +(Math.round(__num + "e+2") + "e-2");
         },
     };
 
@@ -198,12 +198,12 @@
                 const __top = parseInt(window.getComputedStyle(__sceneTarget).getPropertyValue('top'));
                 const __left = parseInt(window.getComputedStyle(__sceneTarget).getPropertyValue('left'));
                 const __center = window.innerWidth > 767 ? (__thisHalf - __sceneTargetWidth) - __left : (__thisHalf - (__sceneTargetWidth / 2)) - __left;
-                
+
                 __circleObj[__sizeType][__i].x = __center;
                 if (__sizeType === 'pc') __circleObj['pc'][__i].y = ((window.innerHeight - __floatingNav.offsetHeight) + __sceneTarget.offsetHeight) - __top;
                 if (__sizeType === 'mobile') __circleObj['mobile'][__i].y = (window.innerHeight - __floatingNav.offsetHeight) - __sceneTarget.offsetHeight - __top;
             });
-            
+
             return __circleObj[__sizeType][__n];
         },
         ACCESSIBILITY: function () {
@@ -237,8 +237,8 @@
             },
             DIR: function (__el, __currentTime) {
                 VD_QUALITY.ELEM.__DIRECTION === 1 ?
-                VD_QUALITY.VIDEO.PAUSE(__el, __currentTime) :
-                VD_QUALITY.VIDEO.PLAY(__el, __currentTime);
+                    VD_QUALITY.VIDEO.PAUSE(__el, __currentTime) :
+                    VD_QUALITY.VIDEO.PLAY(__el, __currentTime);
             }
         },
         CLIP: function (__progress) {
@@ -255,10 +255,10 @@
 
             //clip 계산
             __vdQualitySizeArray[0] = VD_QUALITY.ELEM.__FRAME_CLIP_ARRAY[0] - (VD_QUALITY.ELEM.__FRAME_CLIP_ARRAY[0] * __progress);
-            __vdQualitySizeArray[1] = VD_QUALITY.ELEM.__FRAME_CLIP_ARRAY[1] + ((__vdQualityFrameImgSize[0] -VD_QUALITY.ELEM.__FRAME_CLIP_ARRAY[1]) * __progress);
-            __vdQualitySizeArray[2] = VD_QUALITY.ELEM.__FRAME_CLIP_ARRAY[2] + ((__vdQualityFrameImgSize[1] -VD_QUALITY.ELEM.__FRAME_CLIP_ARRAY[2]) * __progress);
+            __vdQualitySizeArray[1] = VD_QUALITY.ELEM.__FRAME_CLIP_ARRAY[1] + ((__vdQualityFrameImgSize[0] - VD_QUALITY.ELEM.__FRAME_CLIP_ARRAY[1]) * __progress);
+            __vdQualitySizeArray[2] = VD_QUALITY.ELEM.__FRAME_CLIP_ARRAY[2] + ((__vdQualityFrameImgSize[1] - VD_QUALITY.ELEM.__FRAME_CLIP_ARRAY[2]) * __progress);
             __vdQualitySizeArray[3] = VD_QUALITY.ELEM.__FRAME_CLIP_ARRAY[3] - (VD_QUALITY.ELEM.__FRAME_CLIP_ARRAY[3] * __progress);
-            
+
             return `rect(${__vdQualitySizeArray[0]}px, ${__vdQualitySizeArray[1]}px, ${__vdQualitySizeArray[2]}px, ${__vdQualitySizeArray[3]}px)`;
         },
         IMG_CHANGE: {
@@ -308,7 +308,7 @@
             __BEFORE_TOP: 0,
             __RATING_ARRAY: []
         },
-        SET: function() {
+        SET: function () {
             if (window.innerWidth <= 767) {
                 VD_DESIGN.ELEM.__INNER.removeAttribute('style');
                 return;
@@ -336,11 +336,11 @@
                         if (__i === 0) __vdDesignX = Number(__value.replace(/[^0-9^.]/g, ''));
                     });
                 }
-                
+
                 [].forEach.call(__vdDesignItemAllEl, (__el, __i) => {
                     let __elLeft = __el.offsetLeft;
                     let __elImgSize = __el.querySelector('img').offsetWidth / 2;
-                    
+
                     VD_DESIGN.ELEM.__RATING_ARRAY.push(
                         __i === 0 ? 0 : (__elLeft - __vdDesignInnerWidth) + __elImgSize
                     )
@@ -348,9 +348,9 @@
                     if (__type === 'leave') __el.querySelector('.item-inner').classList.add('vd-scale');
                     if (__type === 'leaveBack') __el.querySelector('.item-inner').classList.remove('vd-scale');
                 });
-                
+
                 __vdDesignInnerMarginLeft = parseInt(__vdDesignInnerMarginLeft.getPropertyValue('margin-left'));
-                
+
                 VD_DESIGN.ELEM.__RATING_ARRAY.forEach((__rating, __i) => {
                     if (__rating - 100 <= __vdDesignX && __rating + 100 >= __vdDesignX) {
                         __index = __i;
@@ -382,9 +382,9 @@
                     [].forEach.call(__vdDesignItemAllEl, (__el, __i) => {
                         let __elStyle = __el.currentStyle || window.getComputedStyle(__el);
                         __vdDesignItemWidth += __i === 0 ? __el.offsetWidth + parseFloat(__elStyle.marginRight) : __el.offsetWidth + parseFloat(__elStyle.marginRight) + parseFloat(__elStyle.marginLeft);
-                        if (__vdDesignItemAllEl.length -1 === __i) __vdDesignBottom = __vdDesignItemWidth - (__el.offsetWidth - 13);
+                        if (__vdDesignItemAllEl.length - 1 === __i) __vdDesignBottom = __vdDesignItemWidth - (__el.offsetWidth - 13);
                     });
-    
+
                     __vdDesignX = -(((__vdDesignBottom * 1) * 1e3) / 1e3);
                 } else {
                     VD_DESIGN.CALC.INNER_X('set');
@@ -392,17 +392,17 @@
                     // console.log('VD_DESIGN.ELEM.__RATING_ARRAY : ', VD_DESIGN.ELEM.__RATING_ARRAY);
                     // console.log('__vdDesignX : ', __vdDesignX);
                 }
-                
+
                 return __vdDesignX;
             },
         },
         VIDEO: function () {
             VD_DESIGN.ELEM.__DIRECTION === -1 ?
-            VD_COMMON.VIDEO.PLAY(document.querySelector(__vdDesign), `${__vdDesign} .vd-video-box .vd-video-cont`, 0) : 
-            VD_COMMON.VIDEO.PAUSE(document.querySelector(__vdDesign), `${__vdDesign} .vd-video-box .vd-video-cont`, 0)
+                VD_COMMON.VIDEO.PLAY(document.querySelector(__vdDesign), `${__vdDesign} .vd-video-box .vd-video-cont`, 0) :
+                VD_COMMON.VIDEO.PAUSE(document.querySelector(__vdDesign), `${__vdDesign} .vd-video-box .vd-video-cont`, 0)
         }
     };
-    
+
     //vd acc function
     const VD_ACC = {
         ELEM: {
@@ -413,28 +413,28 @@
             __ACC_SCROLL_ITEM_LIST: document.querySelector(`${__vdAcc} .vd-acc-scroll .vd-acc-item-list`)
         },
         REMOTE: {
-            LARGE_IMG_SIZE:() => {
+            LARGE_IMG_SIZE: () => {
                 return VD_ACC.ELEM.__FRONT_LARGE.offsetWidth;
             },
-            SIZE:() => {
+            SIZE: () => {
                 const __size = VD_COMMON.ELEM.__WINDOW_WIDTH > 767 ? VD_ACC.ELEM.__FRONT_AFTER.naturalWidth : 105;
 
                 return __size;
             },
-            START_TOP:(__n) => {
+            START_TOP: (__n) => {
                 const __screenHeight = (VD_COMMON.ELEM.__WINDOW_HEIGHT - VD_COMMON.ELEM.__FLOATING_NAV.offsetHeight) / 2;
                 const __remoteHeight = VD_ACC.ELEM.__FRONT_AFTER.naturalHeight / 2;
                 const __resultTop = VD_COMMON.ELEM.__WINDOW_WIDTH > 767 ? VD_COMMON.ROUND_TWO(__screenHeight - __remoteHeight) + __n : VD_ACC.ELEM.__STORY01_REMOTE.getBoundingClientRect().top - VD_COMMON.ELEM.__FLOATING_NAV.offsetHeight;
 
                 return __resultTop;
             },
-            STORY01_BOTTOM:() => {
+            STORY01_BOTTOM: () => {
                 const __bottom = parseInt(window.getComputedStyle(VD_ACC.ELEM.__STORY01_REMOTE).getPropertyValue('bottom'));
                 const __n = VD_COMMON.ELEM.__WINDOW_WIDTH > 767 ? 75 : 25;
 
                 return __bottom + __n;
             },
-            LEAVE:() => {
+            LEAVE: () => {
                 if (document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).className.indexOf('vd-action') === -1) {
                     document.querySelector(`${__vdAcc} .vd-qled-acc-start .vd-remote-box`).classList.remove('vd-hide');
                     document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).removeAttribute('style');
@@ -442,12 +442,12 @@
                     document.querySelector(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-box`).classList.remove('vd-show');
                 }
             },
-            SCREEN_CHANGE:() => {
+            SCREEN_CHANGE: () => {
                 document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).style.zIndex = 5;
                 document.querySelector(`${__vdAcc} .vd-qled-acc-story02`).removeAttribute('style');
             }
         },
-        INNER_X:() => {
+        INNER_X: () => {
             const __itemAll = VD_ACC.ELEM.__ACC_SCROLL_ITEM_LIST.querySelectorAll('[class*="vd-acc-item0"]');
             let __x = 0;
 
@@ -458,7 +458,7 @@
             return -(__x);
         }
     };
-    
+
     const VD_SCROLL_TRIGGER = {
         VD_KV_SCROLL: function () {
             if (!document.querySelector(__vdKv)) return;
@@ -470,7 +470,7 @@
                     start: 'top top',
                     end: '800px center',
                     scrub: 0.5,
-                    onLeaveBack:() => {
+                    onLeaveBack: () => {
                         //???
                         setTimeout(() => {
                             document.querySelector('.vd-qled-smart-story04 .vd-qled-smart-story-end').style.visibility = 'inherit';
@@ -508,8 +508,8 @@
                 trigger: `${__vdSmart} .vd-sticky-wrap`,
                 start: 'top top',
                 end: 'bottom bottom',
-                onEnter:(__e) => {
-                    
+                onEnter: (__e) => {
+
                     const __vdSmartTimeline = gsap.timeline({
                         scrollTrigger: {
                             trigger: __e.trigger,
@@ -555,20 +555,20 @@
                         scale: 1
                     }, '-=0.95').to(`${__vdSmart} .vd-qled-smart-monitor .vd-img-after`, {
                         autoAlpha: 1
-                    }, '-=0.6').to(['.vd-qled-smart-story01', '.vd-qled-smart-story01 .story-inner'],{
-                        onEnter: function() {
+                    }, '-=0.6').to(['.vd-qled-smart-story01', '.vd-qled-smart-story01 .story-inner'], {
+                        onEnter: function () {
                             if (VD_COMMON.ELEM.__LOAD_SCROLL_TOP !== 0 && VD_COMMON.ELEM.__LOAD_CHECK) {
                                 VD_COMMON.ELEM.__LOAD_CHECK = false;
                                 window.scrollTo(0, window.pageYOffset - 2);
                             }
                         },
-                        onLeave: function() {
+                        onLeave: function () {
                             this.vars.onUpdate(1);
                         },
                         // onLeaveBack: function () {
                         //     this.vars.onUpdate(0);
                         // },
-                        onUpdate: function(__progress) {
+                        onUpdate: function (__progress) {
                             const __story01Element = __e.trigger.querySelector('.vd-qled-smart-story01');
                             const __story01InnerElement = __story01Element.querySelector('.story-inner');
                             const __r = typeof this.progress !== 'undefined' ? this.progress() : __progress;
@@ -580,20 +580,20 @@
                         autoAlpha: 1
                     }).to('.vd-qled-smart-story01 .vd-story-a', {
                         autoAlpha: 1
-                    }).to(['.vd-qled-smart-story02', '.vd-qled-smart-story02 .story-inner'],{
-                        onEnter: function() {
+                    }).to(['.vd-qled-smart-story02', '.vd-qled-smart-story02 .story-inner'], {
+                        onEnter: function () {
                             if (VD_COMMON.ELEM.__LOAD_SCROLL_TOP !== 0 && VD_COMMON.ELEM.__LOAD_CHECK) {
                                 VD_COMMON.ELEM.__LOAD_CHECK = false;
                                 window.scrollTo(0, window.pageYOffset - 2);
                             }
                         },
-                        onLeave: function() {
+                        onLeave: function () {
                             this.vars.onUpdate(1);
                         },
                         // onLeaveBack: function () {
                         //     this.vars.onUpdate(0);
                         // },
-                        onUpdate: function(__progress) {
+                        onUpdate: function (__progress) {
                             const __story02Element = __e.trigger.querySelector('.vd-qled-smart-story02');
                             const __story02InnerElement = __story02Element.querySelector('.story-inner');
                             const __r = typeof this.progress !== 'undefined' ? this.progress() : __progress;
@@ -605,20 +605,20 @@
                         autoAlpha: 1
                     }).to('.vd-qled-smart-story02 .vd-story-a', {
                         autoAlpha: 1
-                    }).to(['.vd-qled-smart-story03', '.vd-qled-smart-story03 .story-inner'],{
-                        onEnter: function() {
+                    }).to(['.vd-qled-smart-story03', '.vd-qled-smart-story03 .story-inner'], {
+                        onEnter: function () {
                             if (VD_COMMON.ELEM.__LOAD_SCROLL_TOP !== 0 && VD_COMMON.ELEM.__LOAD_CHECK) {
                                 VD_COMMON.ELEM.__LOAD_CHECK = false;
                                 window.scrollTo(0, window.pageYOffset - 2);
                             }
                         },
-                        onLeave: function() {
+                        onLeave: function () {
                             this.vars.onUpdate(1);
                         },
                         // onLeaveBack: function () {
                         //     this.vars.onUpdate(0);
                         // },
-                        onUpdate: function(__progress) {
+                        onUpdate: function (__progress) {
                             const __story03Element = __e.trigger.querySelector('.vd-qled-smart-story03');
                             const __story03InnerElement = __story03Element.querySelector('.story-inner');
                             const __r = typeof this.progress !== 'undefined' ? this.progress() : __progress;
@@ -630,20 +630,20 @@
                         autoAlpha: 1
                     }).to('.vd-qled-smart-story03 .vd-story-a', {
                         autoAlpha: 1
-                    }).to(['.vd-qled-smart-story04', '.vd-qled-smart-story04 .story-inner'],{
-                        onEnter: function() {
+                    }).to(['.vd-qled-smart-story04', '.vd-qled-smart-story04 .story-inner'], {
+                        onEnter: function () {
                             if (VD_COMMON.ELEM.__LOAD_SCROLL_TOP !== 0 && VD_COMMON.ELEM.__LOAD_CHECK) {
                                 VD_COMMON.ELEM.__LOAD_CHECK = false;
                                 window.scrollTo(0, window.pageYOffset - 2);
                             }
                         },
-                        onLeave: function() {
+                        onLeave: function () {
                             this.vars.onUpdate(1);
                         },
                         // onLeaveBack: function () {
                         //     this.vars.onUpdate(0);
                         // },
-                        onUpdate: function(__progress) {
+                        onUpdate: function (__progress) {
                             const __story04Element = __e.trigger.querySelector('.vd-qled-smart-story04');
                             const __story04InnerElement = __story04Element.querySelector('.story-inner');
                             const __r = typeof this.progress !== 'undefined' ? this.progress() : __progress;
@@ -680,7 +680,7 @@
                         autoAlpha: 0
                     });
                 },
-                onLeave:() => console.log('end')
+                onLeave: () => console.log('end')
             });
         },
         VD_QUALITY_SCROLL: function () {
@@ -694,17 +694,17 @@
                     end: "bottom 225%", // end after scrolling 500px beyond the start
                     scrub: 0.5,
                     invalidateOnRefresh: true,
-                    onUpdate:(__this) => {
+                    onUpdate: (__this) => {
                         VD_QUALITY.ELEM.__DIRECTION = __this.direction;
                     },
-                    onLeaveBack:() => {
+                    onLeaveBack: () => {
                         VD_QUALITY.VIDEO.PAUSE(`${__vdQuality} .vd-qled-quality-start .vd-video-box .vd-video-cont`, 0);
                     }
                 }
             });
-        
+
             __vdQualityline.to(`${__vdQuality} .vd-qled-quality-start .vd-video-box .vd-video-cont`, {
-                onStart:() => {
+                onStart: () => {
                     VD_QUALITY.VIDEO.PLAY(`${__vdQuality} .vd-qled-quality-start .vd-video-box .vd-video-cont`, 0);
                     //document.querySelector(`${__vdQuality} .vd-txt-wrap.vd-header`).style.opacity = 1;
                 }
@@ -749,14 +749,14 @@
             }, '-=0.25').call(
                 VD_QUALITY.IMG_CHANGE.MOTION
             ).to(`${__vdQuality} .vd-qled-quality-story03 .vd-video-cont`, {
-                onStart:() => {
+                onStart: () => {
                     document.querySelector(`${__vdQuality} .vd-qled-quality-story03`).style.zIndex = 4;
                     VD_QUALITY.VIDEO.PAUSE(`${__vdQuality} .vd-qled-quality-story03 .vd-video-cont`, 0);
                 },
-                onComplete:() => {
+                onComplete: () => {
                     VD_QUALITY.VIDEO.PLAY(`${__vdQuality} .vd-qled-quality-story03 .vd-video-cont`, 0);
                 },
-                onUpdate:() => {
+                onUpdate: () => {
                     const __vdBox = document.querySelectorAll('.vd-qled-quality-story03 .vd-video-box');
                     [].forEach.call(__vdBox, (__videoBoxEl) => {
                         if (!__videoBoxEl.children[0].paused) {
@@ -764,7 +764,7 @@
                         }
                     });
                 },
-                duration:2,
+                duration: 2,
                 scale: 1
             }, '+=1.5').fromTo(`${__vdQuality} .vd-qled-quality-story03 .vd-video-btn`,
                 {
@@ -776,7 +776,7 @@
             );
 
             ScrollTrigger.matchMedia({
-                "(min-width: 768px)": function() {
+                "(min-width: 768px)": function () {
                     gsap.to(`${__vdQuality} .vd-qled-quality-end .vd-desc span`, {
                         scrollTrigger: {
                             trigger: __vdQuality,
@@ -784,13 +784,13 @@
                             start: '75% top',
                             end: '95% center',
                             scrub: 0.5,
-                            onEnter:(__this) => VD_COMMON.VIDEO.PAUSE(__this.trigger, `${__vdQuality} .vd-qled-quality-story03 .vd-video-cont`, 0),
-                            onLeaveBack:(__this) => VD_COMMON.VIDEO.PLAY(__this.trigger, `${__vdQuality} .vd-qled-quality-story03 .vd-video-cont`, 0)
+                            onEnter: (__this) => VD_COMMON.VIDEO.PAUSE(__this.trigger, `${__vdQuality} .vd-qled-quality-story03 .vd-video-cont`, 0),
+                            onLeaveBack: (__this) => VD_COMMON.VIDEO.PLAY(__this.trigger, `${__vdQuality} .vd-qled-quality-story03 .vd-video-cont`, 0)
                         },
                         autoAlpha: 1
                     });
                 },
-                "(max-width: 767px)": function() {
+                "(max-width: 767px)": function () {
                     gsap.to(`${__vdQuality} .vd-qled-quality-end .vd-desc span`, {
                         scrollTrigger: {
                             trigger: __vdQuality,
@@ -798,8 +798,8 @@
                             start: '80% top',
                             end: 'bottom bottom',
                             scrub: 0.5,
-                            onEnter:(__this) => VD_COMMON.VIDEO.PAUSE(__this.trigger, `${__vdQuality} .vd-qled-quality-story03 .vd-video-cont`, 0),
-                            onLeaveBack:(__this) => VD_COMMON.VIDEO.PLAY(__this.trigger, `${__vdQuality} .vd-qled-quality-story03 .vd-video-cont`, 0)
+                            onEnter: (__this) => VD_COMMON.VIDEO.PAUSE(__this.trigger, `${__vdQuality} .vd-qled-quality-story03 .vd-video-cont`, 0),
+                            onLeaveBack: (__this) => VD_COMMON.VIDEO.PLAY(__this.trigger, `${__vdQuality} .vd-qled-quality-story03 .vd-video-cont`, 0)
                         },
                         autoAlpha: 1
                     });
@@ -816,16 +816,16 @@
                     start: 'top top',
                     end: 'center center',
                     scrub: 0.5,
-                    onEnter:(__this) => {
+                    onEnter: (__this) => {
                         VD_COMMON.VIDEO.PLAY(__this.trigger, `${__vdSound} .vd-qled-sound-video01 .vd-video-box .vd-video-cont`, 0)
                         VD_COMMON.VIDEO.PAUSE(__this.trigger, `${__vdSound} .vd-qled-sound-video02 .vd-video-box .vd-video-cont`, 0);
                     },
-                    onEnterBack:(__this) => VD_COMMON.VIDEO.PLAY(__this.trigger, `${__vdSound} .vd-qled-sound-video01 .vd-video-box .vd-video-cont`, 0),
-                    onLeave:(__this) => VD_COMMON.VIDEO.PAUSE(__this.trigger, `${__vdSound} .vd-qled-sound-video01 .vd-video-box .vd-video-cont`, 0),
-                    onLeaveBack:(__this) => VD_COMMON.VIDEO.PAUSE(__this.trigger, `${__vdSound} .vd-qled-sound-video01 .vd-video-box .vd-video-cont`, 0)
+                    onEnterBack: (__this) => VD_COMMON.VIDEO.PLAY(__this.trigger, `${__vdSound} .vd-qled-sound-video01 .vd-video-box .vd-video-cont`, 0),
+                    onLeave: (__this) => VD_COMMON.VIDEO.PAUSE(__this.trigger, `${__vdSound} .vd-qled-sound-video01 .vd-video-box .vd-video-cont`, 0),
+                    onLeaveBack: (__this) => VD_COMMON.VIDEO.PAUSE(__this.trigger, `${__vdSound} .vd-qled-sound-video01 .vd-video-box .vd-video-cont`, 0)
                 }
             });
-    
+
             gsap.to([`${__vdSound} .vd-qled-sound-video01`, `${__vdSound} .vd-qled-sound-video01 .vd-video-btn`], {
                 scrollTrigger: {
                     trigger: __vdSound,
@@ -833,14 +833,14 @@
                     start: 'top -50%',
                     end: 'center center',
                     scrub: 0.5,
-                    onEnter:(__this) => {
+                    onEnter: (__this) => {
                         VD_COMMON.VIDEO.PAUSE(__this.trigger, `${__vdSound} .vd-qled-sound-video01 .vd-video-box .vd-video-cont`, 0);
                     },
-                    onLeave:(__this) => VD_COMMON.VIDEO.PLAY(__this.trigger, `${__vdSound} .vd-qled-sound-video02 .vd-video-box .vd-video-cont`, 0)
+                    onLeave: (__this) => VD_COMMON.VIDEO.PLAY(__this.trigger, `${__vdSound} .vd-qled-sound-video02 .vd-video-box .vd-video-cont`, 0)
                 },
                 autoAlpha: 0
             });
-    
+
             gsap.to(`${__vdSound} .vd-qled-sound-end span`, {
                 scrollTrigger: {
                     trigger: __vdSound,
@@ -848,8 +848,8 @@
                     start: '60% top',
                     end: '85% center',
                     scrub: 0.5,
-                    onEnter:(__this) => VD_COMMON.VIDEO.PAUSE(__this.trigger, `${__vdSound} .vd-qled-sound-video02 .vd-video-cont`, 0),
-                    onLeaveBack:(__this) => VD_COMMON.VIDEO.PLAY(__this.trigger, `${__vdSound} .vd-qled-sound-video02 .vd-video-cont`, 0)
+                    onEnter: (__this) => VD_COMMON.VIDEO.PAUSE(__this.trigger, `${__vdSound} .vd-qled-sound-video02 .vd-video-cont`, 0),
+                    onLeaveBack: (__this) => VD_COMMON.VIDEO.PLAY(__this.trigger, `${__vdSound} .vd-qled-sound-video02 .vd-video-cont`, 0)
                 },
                 autoAlpha: 1
             });
@@ -866,17 +866,17 @@
                     end: "bottom 200%", // end after scrolling 500px beyond the start
                     scrub: 0.5,
                     invalidateOnRefresh: true,
-                    onUpdate:(__this) => {
+                    onUpdate: (__this) => {
                         VD_DESIGN.ELEM.__DIRECTION = __this.direction;
                     },
-                    onLeaveBack:() => {
+                    onLeaveBack: () => {
                         VD_COMMON.VIDEO.PAUSE(document.querySelector(__vdDesign), `${__vdDesign} .vd-video-box .vd-video-cont`, 0);
                     }
                 }
             });
-            
+
             __vdDesignTimeline.to(`${__vdDesign} .vd-video-box .vd-video-cont`, {
-                onStart:(__this) => {
+                onStart: (__this) => {
                     VD_COMMON.VIDEO.PLAY(document.querySelector(__vdDesign), `${__vdDesign} .vd-video-box .vd-video-cont`, 0);
                 },
                 duration: 2,
@@ -888,7 +888,7 @@
                     autoAlpha: 1
                 },
                 {
-                    onStart:() => {
+                    onStart: () => {
                         VD_COMMON.VIDEO.PAUSE(document.querySelector(__vdDesign), `${__vdDesign} .vd-video-box .vd-video-cont`, 0);
                     },
                     autoAlpha: 0
@@ -906,15 +906,15 @@
                 {
                     y: 0,
                     autoAlpha: 1
-                },    
+                },
                 {
                     y: -30,
                     autoAlpha: 0
                 }
             ).to(`${__vdDesign} .vd-qled-design-story01 .vd-design-item-list`, {
-                onStart:(__this) => VD_DESIGN.CALC.INNER_X('set', 'enter'),
-                onComplete:(__this) => VD_DESIGN.CALC.INNER_X('set', 'leave'),
-                onUpdate:(__this) => VD_DESIGN.CALC.INNER_X(__this, 'update'),
+                onStart: (__this) => VD_DESIGN.CALC.INNER_X('set', 'enter'),
+                onComplete: (__this) => VD_DESIGN.CALC.INNER_X('set', 'leave'),
+                onUpdate: (__this) => VD_DESIGN.CALC.INNER_X(__this, 'update'),
                 duration: 5,
                 x: VD_DESIGN.CALC.X()
             });
@@ -943,7 +943,7 @@
                     },
                     color: 'white'
                 });
-    
+
                 let __vdAccTimeline = gsap.timeline({
                     scrollTrigger: {
                         id: 'vd-acc-remote',
@@ -955,7 +955,7 @@
                         invalidateOnRefresh: true,
                     }
                 });
-    
+
                 __vdAccTimeline.to(`${__vdAcc} .vd-qled-acc-start .vd-remote-box`, {
                     duration: 2,
                     top: 0
@@ -967,11 +967,11 @@
                     },
                     {
                         id: 'remote-box2',
-                        onUpdate:() => {
+                        onUpdate: () => {
                             const __el = document.querySelector(`${__vdAcc} .vd-qled-acc-start .vd-remote-box .vd-remote-img`);
                             const __r = __vdAccTimeline.getById('remote-box2').ratio;
                             const __top = VD_COMMON.ELEM.__WINDOW_WIDTH > 767 ? VD_ACC.REMOTE.START_TOP(75) : VD_ACC.REMOTE.START_TOP(0);
-    
+
                             __el.style.top = `${__top * __r}px`;
                         },
                         duration: 2,
@@ -979,7 +979,7 @@
                     }, '-=2'
                 ).to([`${__vdAcc} .vd-qled-acc-start .vd-remote-box .remote-back-box`, `${__vdAcc} .vd-qled-acc-start .vd-remote-box .remote-back-box img`], {
                     id: 'remote-change',
-                    onStart:() => {
+                    onStart: () => {
                         document.querySelector(`${__vdAcc} .vd-qled-acc-start .vd-remote-box .original-back-img`).style.zIndex = 5
                         document.querySelector(`${__vdAcc} .vd-qled-acc-start .vd-remote-box .original-back-img`).classList.remove('vd-hide');
                     },
@@ -988,7 +988,7 @@
                     //     document.querySelector(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-box`).classList.remove('vd-hide');
                     //     document.querySelector(`${__vdAcc} .vd-qled-acc-start .vd-remote-box .original-back-img`).classList.remove('vd-hide');
                     // },
-                    onComplete:function () {
+                    onComplete: function () {
                         document.querySelector(`${__vdAcc} .vd-qled-acc-start .vd-remote-box`).classList.remove('vd-show');
                         document.querySelector(`${__vdAcc} .vd-qled-acc-start .vd-remote-box`).classList.add('vd-hide');
                         document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).style.zIndex = 5;
@@ -996,12 +996,12 @@
                         // document.querySelector(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-box`).classList.add('vd-show');
                         document.querySelector(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-light`).classList.add('vd-hide');
                     },
-                    onUpdate:function (__update) {
+                    onUpdate: function (__update) {
                         const __imgBoxHeight = document.querySelector(`${__vdAcc} .vd-qled-acc-start .vd-remote-box .remote-back-box`).offsetHeight;
-                        let __r = __vdAccTimeline.getById('remote-change').ratio == 0 ? 0.001 :  __vdAccTimeline.getById('remote-change').ratio;
+                        let __r = __vdAccTimeline.getById('remote-change').ratio == 0 ? 0.001 : __vdAccTimeline.getById('remote-change').ratio;
                         let __result = __imgBoxHeight * __r;
                         __result = __imgBoxHeight / __result;
-    
+
                         document.querySelector(`${__vdAcc} .vd-qled-acc-start .vd-remote-box .remote-back-box img`).style.transform = `scaleY(${__result})`;
                     },
                     // onLeaveBack:() => {
@@ -1009,7 +1009,7 @@
                     //     document.querySelector(`${__vdAcc} .vd-qled-acc-start .vd-remote-box .original-back-img`).classList.add('vd-hide');
                     // },
                     duration: 2,
-                    scaleY:(__i, __el, __a, t) => {
+                    scaleY: (__i, __el, __a, t) => {
                         if (__el.className.indexOf('remote-back-box') > -1) {
                             return 1 - __i;
                         }
@@ -1021,17 +1021,17 @@
                     xPercent: -50
                 }).to(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-light`, {
                     id: 'vd-qled-acc-light',
-                    onStart:() => {
+                    onStart: () => {
                         //document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).style.zIndex = 5
                         document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).classList.remove('vd-action');
                         document.querySelector(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-light`).classList.remove('vd-hide');
                     },
                     // onUpdate:(__this) => {
-                        // console.log('onUpdate light : ', __this);
-                        // document.querySelector(`${__vdAcc} .vd-qled-acc-start .vd-remote-box`).classList.remove('vd-hide');
-                        // document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).removeAttribute('style');
-                        // document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).classList.remove('vd-hide');
-                        // document.querySelector(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-box`).classList.remove('vd-show');
+                    // console.log('onUpdate light : ', __this);
+                    // document.querySelector(`${__vdAcc} .vd-qled-acc-start .vd-remote-box`).classList.remove('vd-hide');
+                    // document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).removeAttribute('style');
+                    // document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).classList.remove('vd-hide');
+                    // document.querySelector(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-box`).classList.remove('vd-show');
                     // },
                     y: 0
                 }).to(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-light .vd-light-on`, {
@@ -1045,7 +1045,7 @@
                 }, '-=0.6').to(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-effect .light-effect03`, {
                     duration: 1.2,
                     autoAlpha: 1
-                }, '-=0.5').to(`${__vdAcc} .vd-remote-charge .vd-charge11`,{
+                }, '-=0.5').to(`${__vdAcc} .vd-remote-charge .vd-charge11`, {
                     autoAlpha: 1
                 }, '-=0.6').to(`${__vdAcc} .vd-remote-charge .vd-charge10`, {
                     autoAlpha: 1
@@ -1066,8 +1066,8 @@
                     bottom: VD_ACC.REMOTE.STORY01_BOTTOM()
                 }, '-=0.5').call(
                     VD_ACC.REMOTE.SCREEN_CHANGE
-                ).to(`${__vdAcc} .vd-qled-acc-story02 .vd-charge-item01`, {
-                    onStart:() => {
+                ).to(`${__vdAcc} .vd-qled-acc-story02 class*="vd-charge-item0"]`, {
+                    onStart: () => {
                         document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).removeAttribute('style');
                         document.querySelector(`${__vdAcc} .vd-qled-acc-story02`).style.zIndex = 5;
                     },
@@ -1118,7 +1118,7 @@
             },
             END: function () {
                 ScrollTrigger.matchMedia({
-                    "(min-width: 768px)": function() {
+                    "(min-width: 768px)": function () {
                         const __vdAccEnd = document.querySelector(`${__vdAcc} .vd-acc-scroll .vd-qled-acc-end.vd-pc-none`);
                         __vdAccEnd.removeAttribute('style');
 
@@ -1134,12 +1134,12 @@
                             autoAlpha: 1
                         });
                     },
-                    "(max-width: 767px)": function() {
+                    "(max-width: 767px)": function () {
                         const __vdAccEnd = document.querySelector(`${__vdAcc} .vd-acc-scroll .vd-qled-acc-end.vd-pc-none`);
                         const __vdAccItemList = document.querySelector(`${__vdAcc} .vd-acc-scroll .vd-acc-item-list`);
                         const __marginTop = ((VD_COMMON.ELEM.__WINDOW_HEIGHT - VD_COMMON.ELEM.__FLOATING_NAV.offsetHeight) - __vdAccItemList.offsetHeight) / 2;
                         __vdAccEnd.style.marginTop = `-${__marginTop}px`;
-    
+
                         let __vdAccScrollTimeline = gsap.timeline({
                             scrollTrigger: {
                                 id: 'vd-qled-acc-end',
@@ -1151,7 +1151,7 @@
                                 invalidateOnRefresh: true,
                             }
                         });
-                
+
                         __vdAccScrollTimeline.to(`${__vdAcc} .vd-acc-scroll .vd-acc-item-list`, {
                             duration: 2,
                             x: VD_ACC.INNER_X()
@@ -1231,8 +1231,8 @@
                 },
                 mobile: {
                     slidesPerView: 'auto',
-					watchSlidesVisibility: true,
-					freeMode: true,
+                    watchSlidesVisibility: true,
+                    freeMode: true,
                     mousewheel: true,
                 }
             }
@@ -1251,7 +1251,7 @@
 
             if (VD_SLIDE.ELEM.__SWIPER != null) VD_SLIDE.ELEM.__SWIPER.destroy();
             VD_SLIDE.ELEM.__SWIPER = null;
-            
+
             if (VD_SLIDE.ELEM.__SWIPER === null) VD_SLIDE.ELEM.__SWIPER = new Swiper(VD_SLIDE.ELEM.__COMPARE_SWIPER, this.ELEM.__COMPARE_SWIPER_OPTION[__mode]);
         },
         EVENT: function () {
@@ -1289,7 +1289,7 @@
                 [].forEach.call(__vdCompareItem, (__itemEl) => {
                     if (__itemEl.className.indexOf('swiper-slide-visible') > -1) __visibleItemArray.push(__itemEl);
                 });
-                
+
                 return __visibleItemArray;
             },
             //key accessibility
@@ -1302,7 +1302,7 @@
                 const __nextBtn = __vdCompareWrap.querySelector('.vd-compare-button-next');
 
                 [].forEach.call(__vdCompareItem, (__itemEl) => {
-                    __itemEl.addEventListener('keydown', function (e) {                       
+                    __itemEl.addEventListener('keydown', function (e) {
                         const __keyCode = e.key.toLowerCase();
                         const __ePath = e.target.parentNode.parentNode;
 
@@ -1384,13 +1384,13 @@
     });
 
     //resize event
-    window.addEventListener("resize", function(e) {
+    window.addEventListener("resize", function (e) {
         let __isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
         VD_COMMON.ELEM.__WINDOW_WIDTH = window.innerWidth;
         VD_COMMON.ELEM.__WINDOW_HEIGHT = window.innerHeight;
         VD_COMMON.ELEM.__BEFORE_RESIZE_TYPE = VD_COMMON.ELEM.__WINDOW_WIDTH > 767 ? 2 : 1;
-        
+
         //set Vh
         VD_COMMON.SET.VH();
 
@@ -1416,16 +1416,16 @@
                     VD_DESIGN.SET();
                     let __designScroll = ScrollTrigger.getById('qled-design');
                     let __accEnd = ScrollTrigger.getById('vd-qled-acc-end');
-    
+
                     if (typeof __designScroll !== 'undefined') __designScroll.kill();
                     if (typeof __accEnd !== 'undefined') __accEnd.kill();
-    
+
                     VD_SCROLL_TRIGGER.VD_DESIGN_SCROLL();
                     VD_SCROLL_TRIGGER.VD_ACC_SCROLL.END();
                 }, VD_COMMON.ELEM.__DELAY);
             }
         }
-        
+
     });
 
     //window load
