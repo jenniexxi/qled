@@ -85,15 +85,7 @@
                             __videoBtn.classList.add('vd-btn-pause');
                             __videoBtn.children[0].innerText = 'Pause';
 
-                            //tagging - 공통화작업
-                            // let __tagging = __videoBtn.getAttribute('an-la');
-                            // __tagging = __tagging.replace('play', 'stop');
-                            // __videoBtn.setAttribute('an-la', __tagging);
-
-                            //공통화 작업 ver.1
-                            VD_COMMON.TAGGING.VIDEO.PLAY(__videoBtn);
-                            //공통화 작업 ver.2
-                            // VD_COMMON.TAGGING(__videoBtn);
+                            VD_COMMON.TAGGING.VIDEO.PLAY_PAUSE_BTN(__videoBtn, 'stop');
                         }
                     });
                 });
@@ -116,15 +108,7 @@
                             __videoBtn.classList.add('vd-btn-play');
                             __videoBtn.children[0].innerText = 'Play';
 
-                            //tagging - 공통화작업
-                            // let __tagging = __videoBtn.getAttribute('an-la');
-                            // __tagging = __tagging.replace('stop', 'play');
-                            // __videoBtn.setAttribute('an-la', __tagging);
-
-                            //공통화 작업 ver.1
-                            VD_COMMON.TAGGING.VIDEO.PAUSE(__videoBtn);
-                            //공통화 작업 ver.2
-                            VD_COMMON.TAGGING(__videoBtn);
+                            VD_COMMON.TAGGING.VIDEO.PLAY_PAUSE_BTN(__videoBtn, 'play');
                         }
                     });
                 });
@@ -146,14 +130,7 @@
                             __el.children[0].innerText = 'Play';
                             __target.pause();
 
-                            //tagging - 공통화작업
-                            // __tagging = __tagging.replace('stop', 'play');
-                            // __el.setAttribute('an-la', __tagging);
-
-                            //공통화 작업 ver.1
-                            VD_COMMON.TAGGING.EVENT.PAUSE(__el);
-                            //공통화 작업 ver.2
-                            // VD_COMMON.TAGGING(__el);
+                            VD_COMMON.TAGGING.VIDEO.PLAY_PAUSE_BTN(__el, 'stop');
                         } else {
                             __el.classList.remove('vd-btn-play');
                             __el.classList.add('vd-btn-pause');
@@ -161,14 +138,7 @@
                             __target.currentTime = 0;
                             __target.play();
 
-                            //tagging - 공통화작업
-                            // __tagging = __tagging.replace('play', 'stop');
-                            // __el.setAttribute('an-la', __tagging);
-
-                            //공통화 작업 ver.1
-                            VD_COMMON.TAGGING.EVENT.PLAY(__el);
-                            //공통화 작업 ver.2
-                            // VD_COMMON.TAGGING(__el);
+                            VD_COMMON.TAGGING.VIDEO.PLAY_PAUSE_BTN(__el, 'play');
                         }
                     });
                 });
@@ -177,43 +147,22 @@
         ROUND_TWO: function (__num) {
             return +(Math.round(__num + "e+2") + "e-2");
         },
-        //공통화 작업 ver.1
         TAGGING: {
             VIDEO: {
-                PLAY: function (__videoBtn) {
+                PLAY_PAUSE_BTN: function (__videoBtn, __type) {
                     let __tagging = __videoBtn.getAttribute('an-la');
-                    __tagging = __tagging.replace('play', 'stop');
-                    __videoBtn.setAttribute('an-la', __tagging);
-                },
-                PAUSE: function (__videoBtn) {
-                    let __tagging = __videoBtn.getAttribute('an-la');
-                    __tagging = __tagging.replace('stop', 'play');
+                    __type == 'stop' ? __tagging = __tagging.replace('stop', 'play') : __tagging = __tagging.replace('play', 'stop');
                     __videoBtn.setAttribute('an-la', __tagging);
                 },
             },
             EVENT: {
-                PLAY: function (__el) {
+                PLAY_PAUSE_BTN: function (__videoBtn, __type) {
                     let __tagging = __el.getAttribute('an-la');
-                    __tagging = __tagging.replace('play', 'stop');
-                    __el.setAttribute('an-la', __tagging);
-                },
-                PAUSE: function (__el) {
-                    let __tagging = __el.getAttribute('an-la');
-                    __tagging = __tagging.replace('stop', 'play');
-                    __el.setAttribute('an-la', __tagging);
+                    __type == 'stop' ? __tagging = __tagging.replace('stop', 'play') : __tagging = __tagging.replace('play', 'stop');
+                    __videoBtn.setAttribute('an-la', __tagging);
                 },
             }
         },
-        //공통화 작업 ver.2
-        // TAGGING: function (__elname) {
-        //     let __tagging = __elname.getAttribute('an-la');
-        //     if (__tagging.indexOf("stop") != -1) {
-        //         __tagging = __tagging.replace('stop', 'play');
-        //     } else {
-        //         __tagging = __tagging.replace('play', 'stop');
-        //     }
-        //     __elname.setAttribute('an-la', __tagging);
-        // },
     };
 
     //vd smart function
@@ -342,15 +291,7 @@
                     __videoBtn.classList.add('vd-btn-play');
                     __videoBtn.children[0].innerText = 'Play';
 
-                    //tagging - 공통화작업
-                    // let __tagging = __videoBtn.getAttribute('an-la');
-                    // __tagging = __tagging.replace('stop', 'play');
-                    // __videoBtn.setAttribute('an-la', __tagging);
-
-                    //공통화 작업 ver.1
-                    VD_COMMON.TAGGING.VIDEO.PAUSE(__videoBtn);
-                    //공통화 작업 ver.2
-                    // VD_COMMON.TAGGING(__videoBtn);
+                    VD_COMMON.TAGGING.VIDEO.PLAY_PAUSE_BTN(__videoBtn, 'stop');
                 });
             }
         },
@@ -419,15 +360,7 @@
                     __videoBtn.classList.add('vd-btn-play');
                     __videoBtn.children[0].innerText = 'Play';
 
-                    //tagging - 공통화작업
-                    // let __tagging = __videoBtn.getAttribute('an-la');
-                    // __tagging = __tagging.replace('stop', 'play');
-                    // __videoBtn.setAttribute('an-la', __tagging);
-
-                    //공통화 작업 ver.1
-                    VD_COMMON.TAGGING.VIDEO.PLAY(__videoBtn);
-                    //공통화 작업 ver.2
-                    // VD_COMMON.TAGGING(__videoBtn);
+                    VD_COMMON.TAGGING.VIDEO.PLAY_PAUSE_BTN(__videoBtn, 'play');
                 });
             }
         },
