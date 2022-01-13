@@ -37,16 +37,20 @@
             ON_SCROLL: function (__scrollTop = window.scrollY || window.pageYOffset) {
                 const __floatingNav = VD_COMMON.ELEM.__FLOATING_NAV;
                 const __floatingNavHeight = __floatingNav.className.indexOf('--fixed') > 0 ? __floatingNav.offsetHeight : 0;
-
                 if (__floatingNavHeight > 0) document.querySelector('.vd-qled-kv').classList.add('kv-sticky-top');
                 if (__floatingNavHeight === 0) document.querySelector('.vd-qled-kv').classList.remove('kv-sticky-top');
+                if (__scrollTop >= __floatingNav.offsetHeight) {
+                    document.querySelector(`${__vdKv} .vd-info-scroll`).style.opacity = 0;
+                } else {
+                    document.querySelector(`${__vdKv} .vd-info-scroll`).style.opacity = 1;
+                }
             },
             IE_SCROLL: function (__scrollTop = window.scrollY || window.pageYOffset) {
-                // stickybits('.vd-sticky-in', {
-                //     useFixed : true,
-                //     stuckClass: "vd-sticky-out",
-                //     stickyBitStickyOffset: VD_COMMON.ELEM.__FLOATING_NAV.offsetHeight,
-                // });
+                stickybits('.vd-sticky-in', {
+                    useFixed: true,
+                    stuckClass: "vd-sticky-out",
+                    stickyBitStickyOffset: VD_COMMON.ELEM.__FLOATING_NAV.offsetHeight,
+                });
             },
             LOW: function (__time) {
                 console.log('low time : ', __time);
@@ -183,6 +187,57 @@
         },
     };
 
+    const VD_KV = {
+        SCROLL_BTN: function () {
+
+            const __vdHeight = VD_COMMON.ELEM.__WINDOW_HEIGHT;
+            const __floatingNav = VD_COMMON.ELEM.__FLOATING_NAV.offsetHeight;
+            const __kvHeight = document.querySelector(`${__vdKv}`).offsetHeight;
+            const __scrollDown = document.querySelector(`${__vdKv} .vd-info-scroll`);
+
+            if ((__vdHeight - __floatingNav) >= __kvHeight) {
+                __scrollDown.style.position = 'absolute';
+            } else {
+                __scrollDown.removeAttribute('style');
+            }
+
+        },
+        VIDEO: {
+            PLAYED: function () {
+                const __videoBtn = document.querySelector(`${__vdKv} .vd-btn-control`);
+                const __vdVideoBox = document.querySelectorAll(`${__vdKv} .vd-video-box`);
+                const __width = VD_COMMON.ELEM.__WINDOW_WIDTH > 767 ? 'mo' : 'pc';
+                setTimeout(() => {
+                    [].forEach.call(__vdVideoBox, (__el) => {
+                        if (__el.className.indexOf(__width) > -1) {
+                            if (!__el.querySelector('video').paused && !__el.querySelector('video').ended) {
+                                __videoBtn.classList.remove('vd-btn-play');
+                                __videoBtn.classList.add('vd-btn-pause');
+                                __videoBtn.children[0].innerText = 'Pause';
+                                VD_COMMON.TAGGING.VIDEO.PLAY_PAUSE_BTN(__videoBtn, 'play');
+                            }
+                        }
+                    });
+                }, 0);
+
+            },
+            END: function () {
+                const __videoBtn = document.querySelector(`${__vdKv} .vd-btn-control`);
+                const __vdVideoBox = document.querySelectorAll(`${__vdKv} .vd-video-box`);
+
+                [].forEach.call(__vdVideoBox, (__el) => {
+                    __el.querySelector('video').addEventListener('ended', function () {
+                        __videoBtn.classList.remove('vd-btn-pause');
+                        __videoBtn.classList.add('vd-btn-play');
+                        __videoBtn.children[0].innerText = 'Play';
+
+                        VD_COMMON.TAGGING.VIDEO.PLAY_PAUSE_BTN(__videoBtn, 'stop');
+                    });
+                });
+            }
+        }
+    }
+
     //vd smart function
     const VD_SMART = {
         ELEM: {
@@ -300,17 +355,17 @@
                 VD_QUALITY.ELEM.__DIRECTION === 1 && VD_QUALITY.VIDEO.PAUSE(__el, __currentTime);
             },
             END: function () {
-                const __videoBtn = document.querySelector(`${__vdQuality} .vd-qled-quality-start .vd-btn-control`);
-                const __sizeMode = VD_COMMON.ELEM.__WINDOW_WIDTH > 767 ? 'mo' : 'pc';
-                const __vdVideoBox = VD_QUALITY.ELEM.__WRAP.querySelector(`.vd-video-box.vd-${__sizeMode}-none`);
-                const __vdVideoEl = __vdVideoBox.querySelector('video');
+                const __videoBtn = document.querySelector(`${__vdQuality} .vd-btn-control`);
+                const __vdVideoBox = document.querySelectorAll(`${__vdQuality} .vd-video-box`);
 
-                __vdVideoEl.addEventListener('ended', function () {
-                    __videoBtn.classList.remove('vd-btn-pause');
-                    __videoBtn.classList.add('vd-btn-play');
-                    __videoBtn.children[0].innerText = 'Play';
+                [].forEach.call(__vdVideoBox, (__el) => {
+                    __el.querySelector('video').addEventListener('ended', function () {
+                        __videoBtn.classList.remove('vd-btn-pause');
+                        __videoBtn.classList.add('vd-btn-play');
+                        __videoBtn.children[0].innerText = 'Play';
 
-                    VD_COMMON.TAGGING.VIDEO.PLAY_PAUSE_BTN(__videoBtn, 'stop');
+                        VD_COMMON.TAGGING.VIDEO.PLAY_PAUSE_BTN(__videoBtn, 'stop');
+                    });
                 });
             }
         },
@@ -370,16 +425,16 @@
         VIDEO: {
             END: function () {
                 const __videoBtn = document.querySelector(`${__vdSound} .vd-btn-control`);
-                const __sizeMode = VD_COMMON.ELEM.__WINDOW_WIDTH > 767 ? 'mo' : 'pc';
-                const __vdVideoBox = VD_SOUND.ELEM.__WRAP.querySelector(`.vd-video-box.vd-${__sizeMode}-none`);
-                const __vdVideoEl = __vdVideoBox.querySelector('video');
+                const __vdVideoBox = document.querySelectorAll(`${__vdSound} .vd-video-box`);
 
-                __vdVideoEl.addEventListener('ended', function () {
-                    __videoBtn.classList.remove('vd-btn-pause');
-                    __videoBtn.classList.add('vd-btn-play');
-                    __videoBtn.children[0].innerText = 'Play';
+                [].forEach.call(__vdVideoBox, (__el) => {
+                    __el.querySelector('video').addEventListener('ended', function () {
+                        __videoBtn.classList.remove('vd-btn-pause');
+                        __videoBtn.classList.add('vd-btn-play');
+                        __videoBtn.children[0].innerText = 'Play';
 
-                    VD_COMMON.TAGGING.VIDEO.PLAY_PAUSE_BTN(__videoBtn, 'stop');
+                        VD_COMMON.TAGGING.VIDEO.PLAY_PAUSE_BTN(__videoBtn, 'stop');
+                    });
                 });
             }
         },
@@ -481,22 +536,25 @@
 
                 //rating last value
                 const __itemList = document.querySelectorAll(`${__vdDesign} .vd-design-item-list li`);
-                let value = 0;
+                let __value = 0;
 
                 [].forEach.call(__itemList, (__el, __i) => {
                     let __marginRight = parseInt(window.getComputedStyle(__el).getPropertyValue('margin-right'));
-                    value += __el.offsetWidth + __marginRight;
-                    if (__itemList.length - 1 === __i) value = value - __el.offsetWidth;
+                    __value += __el.offsetWidth + __marginRight;
+                    if (__itemList.length - 1 === __i) __value = __value - __el.offsetWidth;
                 });
 
+                __value += parseInt(window.getComputedStyle(VD_DESIGN.ELEM.__OUTER).getPropertyValue('margin-left'));
+                __value = __value - ((VD_DESIGN.ELEM.__SCROLL_WRAP.offsetWidth - document.querySelector('.vd-design-item06').offsetWidth) / 2);
+
                 if (VD_COMMON.ELEM.__WINDOW_WIDTH > 767) {
-                    __vdDesignX = __rtl !== true ? -(value) : value;
+                    __vdDesignX = __rtl !== true ? -(__value) : __value;
                 } else {
-                    value += parseInt(window.getComputedStyle(VD_DESIGN.ELEM.__OUTER).getPropertyValue('padding-left'));
+                    __value += parseInt(window.getComputedStyle(VD_DESIGN.ELEM.__OUTER).getPropertyValue('padding-left'));
                     if (!__rtl) {
-                        __vdDesignX = __isMobile ? -(value + 1.5) : -(value + 3);
+                        __vdDesignX = __isMobile ? -(__value + 3) : -(__value + 3);
                     } else {
-                        __vdDesignX = __isMobile ? (value + 1.5) : (value + 3);
+                        __vdDesignX = __isMobile ? (__value + 3) : (__value + 3);
                     }
                 }
 
@@ -522,14 +580,15 @@
             },
             END: function () {
                 const __videoBtn = document.querySelector(`${__vdDesign} .vd-btn-control`);
-                const __sizeMode = VD_COMMON.ELEM.__WINDOW_WIDTH > 767 ? 'mo' : 'pc';
-                const __vdVideoBox = VD_DESIGN.ELEM.__WRAP.querySelector(`.vd-video-box.vd-${__sizeMode}-none`);
-                const __vdVideoEl = __vdVideoBox.querySelector('video');
+                const __vdVideoBox = document.querySelectorAll(`${__vdDesign} .vd-video-box`);
 
-                __vdVideoEl.addEventListener('ended', function () {
-                    __videoBtn.classList.remove('vd-btn-pause');
-                    __videoBtn.classList.add('vd-btn-play');
-                    __videoBtn.children[0].innerText = 'Play';
+                [].forEach.call(__vdVideoBox, (__el) => {
+                    __el.querySelector('video').addEventListener('ended', function () {
+                        __videoBtn.classList.remove('vd-btn-pause');
+                        __videoBtn.classList.add('vd-btn-play');
+                        __videoBtn.children[0].innerText = 'Play';
+                        VD_COMMON.TAGGING.VIDEO.PLAY_PAUSE_BTN(__videoBtn, 'stop');
+                    });
                 });
             }
         }
@@ -577,6 +636,7 @@
             SCREEN_CHANGE: () => {
                 document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).style.zIndex = 5;
                 document.querySelector(`${__vdAcc} .vd-qled-acc-story02`).removeAttribute('style');
+                document.querySelector(`${__vdAcc} .vd-qled-acc-story02 .vd-acc-remote-wrap`).classList.remove('vd-acc-play');
             }
         },
         INNER_X: () => {
@@ -599,8 +659,8 @@
                 scrollTrigger: {
                     trigger: __vdKv,
                     //markers: true,
-                    start: `-${VD_COMMON.ELEM.__FLOATING_NAV.offsetHeight}px top`, // when the top of the trigger hits the top of the viewport
-                    end: "bottom 250%", // end after scrolling 500px beyond the start
+                    start: `-${VD_COMMON.ELEM.__FLOATING_NAV.offsetHeight}px top`,
+                    end: "bottom 250%",
                     scrub: 0.5,
                     invalidateOnRefresh: true
                 }
@@ -628,6 +688,165 @@
                 }
             );
         },
+        VD_SMART_SCROLL2: {
+            CIRCLE: function () {
+
+                const __circleTimeline = gsap.timeline({
+                    paused: true,
+                    scrollTrigger: {
+                        trigger: `${__vdSmart} .vd-sticky-wrap.vd-sticky-circle`,
+                        //markers: true,
+                        start: "top top",
+                        end: "bottom 200%",
+                        scrub: 0.5,
+                        invalidateOnRefresh: true
+                    },
+                });
+
+                __circleTimeline.set([`${__vdSmart} .smart-circle01 img`, `${__vdSmart} .smart-circle02 img`, `${__vdSmart} .smart-circle03 img`, `${__vdSmart} .smart-circle04 img`], {
+                    delay: 1,
+                    // rotate: 0.01
+                }).to(`${__vdSmart} .smart-circle0${VD_SMART.CIRCLE(0).sequence}`, {
+                    ease: Back.easeInOut.config(2.5),
+                    x: VD_SMART.CIRCLE(VD_SMART.CIRCLE(0).sequence - 1).x,
+                    y: VD_SMART.CIRCLE(0).y,
+                    duration: 1.2,
+                    scale: 0,
+                    autoAlpha: 0
+                }, '-=0.5').to(`${__vdSmart} .smart-circle0${VD_SMART.CIRCLE(1).sequence}`, {
+                    ease: Back.easeInOut.config(2.5),
+                    x: VD_SMART.CIRCLE(VD_SMART.CIRCLE(1).sequence - 1).x,
+                    y: VD_SMART.CIRCLE(1).y,
+                    duration: 1.2,
+                    scale: 0,
+                    autoAlpha: 0
+                }, '-=1').to(`${__vdSmart} .smart-circle0${VD_SMART.CIRCLE(2).sequence}`, {
+                    ease: Back.easeInOut.config(2.5),
+                    x: VD_SMART.CIRCLE(VD_SMART.CIRCLE(2).sequence - 1).x,
+                    y: VD_SMART.CIRCLE(2).y,
+                    duration: 1.2,
+                    scale: 0,
+                    autoAlpha: 0
+                }, '-=1.1').to(`${__vdSmart} .smart-circle0${VD_SMART.CIRCLE(3).sequence}`, {
+                    ease: Back.easeInOut.config(2.5),
+                    x: VD_SMART.CIRCLE(VD_SMART.CIRCLE(3).sequence - 1).x,
+                    y: VD_SMART.CIRCLE(3).y,
+                    duration: 1.2,
+                    scale: 0,
+                    autoAlpha: 0
+                }, '-=1.125').to([`${__vdSmart} .vd-qled-smart-monitor .vd-img-before .vd-img-inner`, `${__vdSmart} .vd-qled-smart-monitor .vd-img-after .vd-img-inner`], {
+                    delay: 0.1,
+                    y: 0,
+                    scale: 1
+                }, '-=1.5').to(`${__vdSmart} .vd-qled-smart-monitor .vd-img-after`, {
+                    autoAlpha: 1
+                }, '-=0.6');
+
+            },
+            SCENE1: function () {
+                gsap.to(`${__vdSmart} .vd-sticky-wrap.vd-sticky-smart01 .vd-smart-tit`, {
+                    scrollTrigger: {
+                        trigger: `${__vdSmart} .vd-sticky-wrap.vd-sticky-smart01`,
+                        //markers: true,
+                        start: "top top",
+                        end: "bottom 200%",
+                        scrub: 0.5,
+                        invalidateOnRefresh: true
+                    },
+                    rotate: 0.001
+                });
+            },
+            SCENE2: function () {
+                gsap.to(`${__vdSmart} .vd-sticky-wrap.vd-sticky-smart02 .vd-smart-tit`, {
+                    scrollTrigger: {
+                        trigger: `${__vdSmart} .vd-sticky-wrap.vd-sticky-smart02`,
+                        //markers: true,
+                        start: "top top",
+                        end: "bottom 200%",
+                        scrub: 0.5,
+                        invalidateOnRefresh: true
+                    },
+                    rotate: 0.001
+                });
+            },
+            SCENE3: function () {
+                gsap.to(`${__vdSmart} .vd-sticky-wrap.vd-sticky-smart03 .vd-smart-tit`, {
+                    scrollTrigger: {
+                        trigger: `${__vdSmart} .vd-sticky-wrap.vd-sticky-smart03`,
+                        //markers: true,
+                        start: "top top",
+                        end: "bottom 200%",
+                        scrub: 0.5,
+                        invalidateOnRefresh: true
+                    },
+                    rotate: 0.001
+                });
+            },
+            SCENE4: function () {
+                const __scene4Timeline = gsap.timeline({
+                    paused: true,
+                    scrollTrigger: {
+                        trigger: `${__vdSmart} .vd-sticky-wrap.vd-sticky-smart04`,
+                        //markers: true,
+                        start: "top top",
+                        end: "bottom 200%",
+                        scrub: 0.5,
+                        invalidateOnRefresh: true
+                    },
+                });
+
+                __scene4Timeline.to(`${__vdSmart} .vd-sticky-wrap.vd-sticky-smart04 .vd-qled-smart-story-end`, {
+                    duration: 0.5,
+                    autoAlpha: 1
+                }, '+=2').fromTo(`${__vdSmart} .vd-sticky-wrap.vd-sticky-smart04 .vd-qled-smart-story-end .vd-txt-wrap`,
+                    {
+                        y: 60,
+                        autoAlpha: 0
+                    },
+                    {
+                        duration: 1.5,
+                        y: 0,
+                        autoAlpha: 1
+                    }, '-=1'
+                );
+
+                ScrollTrigger.matchMedia({
+                    "(min-width: 768px)": function () {
+                        gsap.to(`${__vdSmart} .vd-sticky-wrap.vd-sticky-smart04 .story-inner > .vd-txt-wrap`, {
+                            scrollTrigger: {
+                                trigger: `${__vdSmart} .vd-sticky-wrap.vd-sticky-smart04`,
+                                //markers: true,
+                                start: '35% top',
+                                end: '60% center',
+                                scrub: 0.5,
+                                // invalidateOnRefresh: true
+                            },
+                            autoAlpha: 0
+                        });
+                    },
+                    "(max-width: 767px)": function () {
+                        gsap.to(`${__vdSmart} .vd-sticky-wrap.vd-sticky-smart04 .story-inner > .vd-txt-wrap`, {
+                            scrollTrigger: {
+                                trigger: `${__vdSmart} .vd-sticky-wrap.vd-sticky-smart04`,
+                                //markers: true,
+                                start: '35% top',
+                                end: '60% center',
+                                scrub: 0.5,
+                                // invalidateOnRefresh: true
+                            },
+                            autoAlpha: 0
+                        });
+                    }
+                });
+            },
+            init: function () {
+                this.CIRCLE();
+                // this.SCENE1();
+                //this.SCENE2();
+                //this.SCENE3();
+                this.SCENE4();
+            }
+        },
         VD_SMART_SCROLL: function () {
             if (!document.querySelector(__vdSmart)) return;
             let __smartLoadCheck1 = false;
@@ -641,8 +860,8 @@
                 scrollTrigger: {
                     trigger: __vdSmart,
                     //markers: true,
-                    start: "top top", // when the top of the trigger hits the top of the viewport
-                    end: "bottom 200%", // end after scrolling 500px beyond the start
+                    start: "top top",
+                    end: "bottom 200%",
                     scrub: 0.5,
                     invalidateOnRefresh: true,
                     //onLeave: () => ScrollTrigger.refresh(),
@@ -683,7 +902,7 @@
                 duration: 1.2,
                 scale: 0,
                 autoAlpha: 0
-            }, '-=1').to([`${__vdSmart} .vd-qled-smart-monitor .vd-img-before .vd-img-inner`, `${__vdSmart} .vd-qled-smart-monitor .vd-img-after .vd-img-inner`], {
+            }, '-=1.125').to([`${__vdSmart} .vd-qled-smart-monitor .vd-img-before .vd-img-inner`, `${__vdSmart} .vd-qled-smart-monitor .vd-img-after .vd-img-inner`], {
                 delay: 0.1,
                 y: 0,
                 scale: 1
@@ -709,10 +928,11 @@
                         }
 
                     },
+                    // delay: 4,
                     duration: 1.5,
                     rotate: 0.01,
                     scaleY: 1
-                }
+                }, '+=2'
             ).to('.vd-qled-smart-story01 .vd-smart-tit', {
                 autoAlpha: 1
             }).fromTo('.vd-qled-smart-story02',
@@ -734,10 +954,11 @@
                             __smartLoadCheck2 = true;
                         }
                     },
+                    // delay: 4,
                     duration: 1.5,
                     rotate: 0.01,
                     scaleY: 1
-                }, '+=1'
+                }, '+=3'
             ).to('.vd-qled-smart-story02 .vd-smart-tit', {
                 autoAlpha: 1
             }).fromTo('.vd-qled-smart-story03',
@@ -759,10 +980,11 @@
                             __smartLoadCheck3 = true;
                         }
                     },
+                    // delay: 4,
                     duration: 1.5,
                     rotate: 0.01,
                     scaleY: 1
-                }, '+=1'
+                }, '+=3'
             ).to('.vd-qled-smart-story03 .vd-smart-tit', {
                 autoAlpha: 1
             }).fromTo('.vd-qled-smart-story04',
@@ -784,10 +1006,11 @@
                             __smartLoadCheck4 = true;
                         }
                     },
+                    // delay: 4,
                     duration: 1.5,
                     rotate: 0.01,
                     scaleY: 1
-                }, '+=1'
+                }, '+=3'
             ).to('.vd-qled-smart-story04 .vd-smart-tit', {
                 autoAlpha: 1
             }).to('.vd-qled-smart-story04 .vd-qled-smart-story-end', {
@@ -824,8 +1047,8 @@
                         scrollTrigger: {
                             trigger: __vdSmart,
                             //markers: true,
-                            start: '75% top',
-                            end: '85% center',
+                            start: '82.5% top',
+                            end: '92.5% center',
                             scrub: 0.5,
                             // invalidateOnRefresh: true
                         },
@@ -844,89 +1067,114 @@
                 scrollTrigger: {
                     trigger: `${__vdQuality} .vd-sticky-wrap.first`,
                     //markers: true,
-                    start: "top top", // when the top of the trigger hits the top of the viewport
-                    end: "bottom 200%", // end after scrolling 500px beyond the start
+                    start: "top top",
+                    end: "bottom 200%",
                     scrub: 0.5,
                     immediateRender: false,
-                    // invalidateOnRefresh: true,
-                    onEnter: () => {
-                        const __story02Video = document.querySelectorAll(`${__vdQuality} .vd-qled-quality-story02 .vd-video-box .vd-video-cont`);
-                        [].forEach.call(__story02Video, (__videoEl) => {
-                            __videoEl.currentTime = 0;
-                            __videoEl.pause();
-                        });
-                    },
-                    onUpdate: (__this) => {
-                        VD_QUALITY.ELEM.__DIRECTION = __this.direction;
-                    },
-                    //onLeave: () => ScrollTrigger.refresh(),
-                    onLeave: () => {
-                        __videoCheck = false;
-                    },
-                    onLeaveBack: () => {
-                        VD_QUALITY.VIDEO.PAUSE(`${__vdQuality} .vd-qled-quality-start .vd-video-box .vd-video-cont`, 0);
-                        const __story02Video = document.querySelectorAll(`${__vdQuality} .vd-qled-quality-story02 .vd-video-box .vd-video-cont`);
-                        [].forEach.call(__story02Video, (__videoEl) => {
-                            __videoEl.currentTime = 0;
-                            __videoEl.pause();
-                        });
-                    },
-                },
-                //smoothChildTiming: true
-            });
-
-            __vdQualityline.fromTo(`${__vdQuality} .vd-qled-quality-start .vd-video-box .vd-video-cont`,
-                {
-                    autoAlpha: 1
-                },
-                {
-                    onStart: () => {
+                    onEnter: (__this) => {
                         VD_QUALITY.VIDEO.PLAY(`${__vdQuality} .vd-qled-quality-start .vd-video-box .vd-video-cont`, 0);
-                        //document.querySelector(`${__vdQuality} .vd-txt-wrap.vd-header`).style.opacity = 1;
+
+                        __this.trigger.querySelector('.vd-txt-wrap.vd-header').style.opacity = 0;
                     },
-                    duration: 3,
-                    autoAlpha: 1
-                }
-            ).call(
-                VD_QUALITY.VIDEO.DIR, [`${__vdQuality} .vd-qled-quality-start .vd-video-box .vd-video-cont`, 0]
-            ).to([`${__vdQuality} .vd-qled-quality-start .vd-video-box .vd-video-cont`, `${__vdQuality} .vd-qled-quality-start .vd-video-btn`], {
-                autoAlpha: 0
-            }).to(`${__vdQuality} .vd-qled-quality-story01`, {
-                onStart: function () {
-                    VD_QUALITY.VIDEO.PAUSE(`${__vdQuality} .vd-qled-quality-story02 .vd-video-box .vd-video-cont`, 0);
-                },
-                onUpdate: function () {
-                    if (this.progress() <= 0.9) {
-                        VD_COMMON.VIDEO.PAUSE(document.querySelector(__vdQuality), `${__vdQuality} .vd-qled-quality-story02 .vd-video-box .vd-video-cont`, 0);
+                    onEnterBack: (__this) => VD_QUALITY.VIDEO.PLAY(`${__vdQuality} .vd-qled-quality-start .vd-video-box .vd-video-cont`, 0),
+                    onLeaveBack: (__this) => {
+                        __this.trigger.querySelector('.vd-txt-wrap.vd-header').removeAttribute('style');
                     }
                 },
-                onComplete: function () {
-                    console.log('video play');
-                    VD_QUALITY.VIDEO.PLAY(`${__vdQuality} .vd-qled-quality-story02 .vd-video-box .vd-video-cont`, 0);
-                },
-                duration: 1.5,
-                scale: 0
-            }).to(`${__vdQuality} .vd-txt-wrap.vd-header`, {
-                autoAlpha: 0
-            }, '-=1.5').to(`${__vdQuality} .vd-qled-quality-story01`, {
-                autoAlpha: 0
-            }).fromTo(`${__vdQuality} .vd-qled-quality-story02`,
-                {
-                    autoAlpha: 1,
-                },
-                {
-                    onUpdate: function () {
-                        if (VD_QUALITY.ELEM.__DIRECTION === -1) {
-                            if (this.progress() <= 1 && !__videoCheck) {
-                                VD_QUALITY.VIDEO.PLAY(`${__vdQuality} .vd-qled-quality-story02 .vd-video-box .vd-video-cont`, 0);
-                                __videoCheck = true;
-                            }
-                        }
-                    },
-                    duration: 2,
-                    autoAlpha: 1,
-                }
-            );
+            });
+
+            // let __vdQualityline = gsap.timeline({
+            //     paused: true,
+            //     scrollTrigger: {
+            //         trigger: `${__vdQuality} .vd-sticky-wrap.first`,
+            //         //markers: true,
+            //         start: "top top",
+            //         end: "bottom 200%",
+            //         scrub: 0.5,
+            //         immediateRender: false,
+            //         // invalidateOnRefresh: true,
+            //         onEnter: (__this) => {
+            //             VD_QUALITY.VIDEO.PLAY(`${__vdQuality} .vd-qled-quality-start .vd-video-box .vd-video-cont`, 0);
+            //             const __story02Video = document.querySelectorAll(`${__vdQuality} .vd-qled-quality-story02 .vd-video-box .vd-video-cont`);
+            //             [].forEach.call(__story02Video, (__videoEl) => {
+            //                 __videoEl.currentTime = 0;
+            //                 __videoEl.pause();
+            //             });
+
+            //             __this.trigger.querySelector('.vd-txt-wrap.vd-header').style.opacity = 0;
+            //         },
+            //         onUpdate: (__this) => {
+            //             VD_QUALITY.ELEM.__DIRECTION = __this.direction;
+            //         },
+            //         //onLeave: () => ScrollTrigger.refresh(),
+            //         onLeave: () => {
+            //             __videoCheck = false;
+            //         },
+            //         onLeaveBack: (__this) => {
+            //             VD_QUALITY.VIDEO.PAUSE(`${__vdQuality} .vd-qled-quality-start .vd-video-box .vd-video-cont`, 0);
+            //             const __story02Video = document.querySelectorAll(`${__vdQuality} .vd-qled-quality-story02 .vd-video-box .vd-video-cont`);
+            //             [].forEach.call(__story02Video, (__videoEl) => {
+            //                 __videoEl.currentTime = 0;
+            //                 __videoEl.pause();
+            //             });
+
+            //             __this.trigger.querySelector('.vd-txt-wrap.vd-header').removeAttribute('style');
+            //         }
+            //     },
+            //     //smoothChildTiming: true
+            // });
+
+            // __vdQualityline.fromTo(`${__vdQuality} .vd-qled-quality-start .vd-video-box .vd-video-cont`,
+            //     {
+            //         autoAlpha: 1
+            //     },
+            //     {
+            //         onStart: () => {
+            //             //document.querySelector(`${__vdQuality} .vd-txt-wrap.vd-header`).style.opacity = 1;
+            //         },
+            //         duration: 3,
+            //         autoAlpha: 1
+            //     }
+            // ).call(
+            //     VD_QUALITY.VIDEO.DIR, [`${__vdQuality} .vd-qled-quality-start .vd-video-box .vd-video-cont`, 0]
+            // ).to([`${__vdQuality} .vd-qled-quality-start .vd-video-box .vd-video-cont`, `${__vdQuality} .vd-qled-quality-start .vd-video-btn`], {
+            //     autoAlpha: 0
+            // }).to(`${__vdQuality} .vd-qled-quality-story01`, {
+            //     onStart: function () {
+            //         VD_QUALITY.VIDEO.PAUSE(`${__vdQuality} .vd-qled-quality-story02 .vd-video-box .vd-video-cont`, 0);
+            //     },
+            //     onUpdate: function () {
+            //         if (this.progress() <= 0.9) {
+            //             VD_COMMON.VIDEO.PAUSE(document.querySelector(__vdQuality), `${__vdQuality} .vd-qled-quality-story02 .vd-video-box .vd-video-cont`, 0);
+            //         }
+            //     },
+            //     onComplete: function () {
+            //         console.log('video play');
+            //         VD_QUALITY.VIDEO.PLAY(`${__vdQuality} .vd-qled-quality-story02 .vd-video-box .vd-video-cont`, 0);
+            //     },
+            //     duration: 1.5,
+            //     scale: 0
+            // }).to(`${__vdQuality} .vd-txt-wrap.vd-header`, {
+            //     autoAlpha: 0
+            // }, '-=1.5').to(`${__vdQuality} .vd-qled-quality-story01`, {
+            //     autoAlpha: 0
+            // }).fromTo(`${__vdQuality} .vd-qled-quality-story02`,
+            //     {
+            //         autoAlpha: 1,
+            //     },
+            //     {
+            //         onUpdate: function () {
+            //             if (VD_QUALITY.ELEM.__DIRECTION === -1) {
+            //                 if (this.progress() <= 1 && !__videoCheck) {
+            //                     VD_QUALITY.VIDEO.PLAY(`${__vdQuality} .vd-qled-quality-story02 .vd-video-box .vd-video-cont`, 0);
+            //                     __videoCheck = true;
+            //                 }
+            //             }
+            //         },
+            //         duration: 2,
+            //         autoAlpha: 1,
+            //     }
+            // );
 
             // .to(`${__vdQuality} .vd-qled-quality-end-img .image`, {
             //     onStart: () => {
@@ -958,7 +1206,7 @@
                             // onEnter:(__this) => VD_COMMON.VIDEO.PAUSE(__this.trigger, `${__vdQuality} .vd-qled-quality-story03 .vd-video-cont`, 0),
                             // onLeaveBack:(__this) => VD_COMMON.VIDEO.PLAY(__this.trigger, `${__vdQuality} .vd-qled-quality-story03 .vd-video-cont`, 0)
                         },
-                        autoAlpha: 1,
+                        autoAlpha: 1
                     });
                 },
                 "(max-width: 767px)": function () {
@@ -989,8 +1237,15 @@
                     end: "bottom 200%",
                     scrub: 0.5,
                     immediateRender: false,
-                    onEnter: (__this) => VD_COMMON.VIDEO.PLAY(__this.trigger, `${__vdSound} .vd-qled-sound-video01 .vd-video-box .vd-video-cont`, 0),
-                    onEnterBack: (__this) => VD_COMMON.VIDEO.PLAY(__this.trigger, `${__vdSound} .vd-qled-sound-video01 .vd-video-box .vd-video-cont`, 0)
+                    onEnter: (__this) => {
+                        VD_COMMON.VIDEO.PLAY(__this.trigger, `${__vdSound} .vd-qled-sound-video01 .vd-video-box .vd-video-cont`, 0);
+                        __this.trigger.querySelector('.vd-txt-wrap.vd-header').style.opacity = 0;
+                    },
+                    onEnterBack: (__this) => VD_COMMON.VIDEO.PLAY(__this.trigger, `${__vdSound} .vd-qled-sound-video01 .vd-video-box .vd-video-cont`, 0),
+                    onLeaveBack: (__this) => {
+                        __this.trigger.querySelector('.vd-txt-wrap.vd-header').removeAttribute('style');
+                        //VD_COMMON.VIDEO.PAUSE(__this.trigger, `${__vdSound} .vd-qled-sound-video01 .vd-video-box .vd-video-cont`, 0);
+                    }
                 },
             });
 
@@ -1055,10 +1310,7 @@
         },
         VD_DESIGN_SCROLL: function () {
             if (!document.querySelector(__vdDesign)) return;
-            let __designLoadCheck1 = false;
-            let __designLoadCheck2 = false;
-            let __videoCheck1 = false;
-            let __videoCheck2 = false;
+            let __videoCheck = false;
 
             const __vdDesignTimeline = gsap.timeline({
                 paused: true,
@@ -1066,16 +1318,19 @@
                     id: 'qled-design',
                     trigger: `${__vdDesign} .vd-sticky-wrap.first`,
                     //markers: true,
-                    start: "top top", // when the top of the trigger hits the top of the viewport
-                    end: "bottom 300%", // end after scrolling 500px beyond the start
+                    start: "top top",
+                    end: "bottom 300%",
+                    ease: 'Power0.easeNone',
                     scrub: 0.5,
                     // invalidateOnRefresh: true,
+                    onEnter: () => {
+                        VD_COMMON.VIDEO.PLAY(document.querySelector(__vdDesign), `${__vdDesign} .vd-qled-design-video .vd-video-box .vd-video-cont`, 0);
+                    },
                     onUpdate: (__this) => {
                         VD_DESIGN.ELEM.__DIRECTION = __this.direction;
                     },
                     onLeave: () => {
-                        __videoCheck1 = false;
-                        __videoCheck2 = false;
+                        __videoCheck = false;
                     },
                     onLeaveBack: () => {
                         VD_COMMON.VIDEO.PAUSE(document.querySelector(__vdDesign), `${__vdDesign} .vd-video-box .vd-video-cont`, 0);
@@ -1088,64 +1343,9 @@
                 }
             });
 
-            __vdDesignTimeline.to(`${__vdDesign} .vd-video-box .vd-video-cont`, {
-                onStart: (__this) => {
-                    VD_COMMON.VIDEO.PLAY(document.querySelector(__vdDesign), `${__vdDesign} .vd-qled-design-video01 .vd-video-box .vd-video-cont`, 0);
-                },
-                duration: 3.5,
-                top: 0
-            }).fromTo(`${__vdDesign} .vd-video-box .vd-video-cont .vd-qled-design-video01`,
+            __vdDesignTimeline.fromTo(`${__vdDesign} .vd-qled-design-video`,
                 {
-                    autoAlpha: 1,
-                    scaleY: 0
-                },
-                {
-                    onStart: () => {
-                        // const __designVideoBtn = document.querySelector(`${__vdDesign} .vd-qled-design-video01 .vd-video-btn`);
-                        // __designVideoBtn.classList.add('vd-hide');
-
-                        VD_COMMON.VIDEO.PAUSE(document.querySelector(__vdDesign), `${__vdDesign} .vd-qled-design-video01 .vd-video-box .vd-video-cont`, 3);
-                    },
-                    onUpdate: function (__progress) {
-                        if (__designLoadCheck1) {
-                            const __designElement = document.querySelector(`${__vdDesign} .vd-qled-design-video01`);
-                            const __designVideoElement = __designElement.querySelectorAll('.vd-video-box');
-                            let __r = typeof this.progress !== 'undefined' ? this.progress() : __progress;
-                            __r = 1 - __r;
-                            __designElement.style.transform = `scaleY(${__r})`;
-                            [].forEach.call(__designVideoElement, (__soundEl) => {
-                                __soundEl.style.transform = `scaleY(${VD_COMMON.SCALE.Y(__r)})`;
-                            });
-
-                            if (VD_DESIGN.ELEM.__DIRECTION === -1) {
-                                if (!__videoCheck1) {
-                                    if (this.progress() <= 0.1) {
-                                        VD_COMMON.VIDEO.PLAY(document.querySelector(__vdDesign), `${__vdDesign} .vd-qled-design-video01 .vd-video-box .vd-video-cont`, 0);
-                                        __videoCheck1 = true;
-                                    }
-                                    if (this.progress() >= 0.1) VD_COMMON.VIDEO.PAUSE(document.querySelector(__vdDesign), `${__vdDesign} .vd-qled-design-video02 .vd-video-box .vd-video-cont`, 0);
-                                }
-                            }
-
-                            if (__r <= 1 && document.querySelector(`${__vdDesign} .vd-header`).getAttribute('style')) document.querySelector(`${__vdDesign} .vd-header`).removeAttribute('style');
-                        } else {
-                            __designLoadCheck1 = true;
-                        }
-                    },
-                    onComplete: function () {
-                        document.querySelector(`${__vdDesign} .vd-header`).style.opacity = 1;
-                        VD_COMMON.VIDEO.PLAY(document.querySelector(__vdDesign), `${__vdDesign} .vd-qled-design-video02 .vd-video-box .vd-video-cont`, 0);
-                        __videoCheck1 = false;
-                    },
-                    delay: 1,
-                    duration: 4,
-                    autoAlpha: 1,
-                    scaleY: 1
-                }, '+=2'
-            ).fromTo(`${__vdDesign} .vd-video-box .vd-video-cont .vd-qled-design-video02`,
-                {
-                    autoAlpha: 1,
-                    scaleY: 0
+                    autoAlpha: 1
                 },
                 {
                     onStart: () => {
@@ -1154,36 +1354,18 @@
 
                         VD_COMMON.VIDEO.PAUSE(document.querySelector(__vdDesign), `${__vdDesign} .vd-qled-design-video02 .vd-video-box .vd-video-cont`, 4);
                     },
-                    onUpdate: function (__progress) {
-                        if (__designLoadCheck2) {
-                            const __designElement = document.querySelector(`${__vdDesign} .vd-qled-design-video02`);
-                            const __designVideoElement = __designElement.querySelectorAll('.vd-video-box');
-                            // const __designVideoBtn = document.querySelector(`${__vdDesign} .vd-qled-design-video02 .vd-video-btn`);
-                            let __r = typeof this.progress !== 'undefined' ? this.progress() : __progress;
-                            __r = 1 - __r;
-                            __designElement.style.transform = `scaleY(${__r})`;
-                            [].forEach.call(__designVideoElement, (__soundEl) => {
-                                __soundEl.style.transform = `scaleY(${VD_COMMON.SCALE.Y(__r)})`;
-                            });
-
-                            if (VD_DESIGN.ELEM.__DIRECTION === -1) {
-                                if (this.progress() <= 0.1 && !__videoCheck2) {
-                                    VD_COMMON.VIDEO.PLAY(document.querySelector(__vdDesign), `${__vdDesign} .vd-qled-design-video02 .vd-video-box .vd-video-cont`, 0);
-                                    __videoCheck2 = true;
-                                }
-                            }
-
-                            // if (__r === 1) __designVideoBtn.classList.remove('vd-hide');
+                    onUpdate: function () {
+                        if (this.progress() <= 0.9 && !__videoCheck) {
+                            document.querySelector(`${__vdDesign} .vd-qled-design-video`).classList.remove('vd-hide');
+                            __videoCheck = true
                         } else {
-                            __designLoadCheck2 = true;
+                            __videoCheck = false;
                         }
                     },
                     onComplete: function () {
-                        console.log('complate2');
-                        __videoCheck2 = false;
+                        document.querySelector(`${__vdDesign} .vd-qled-design-video`).classList.add('vd-hide');
                     },
                     delay: 1,
-                    duration: 4,
                     autoAlpha: 1,
                     scaleY: 1
                 }, '+=3'
@@ -1193,7 +1375,7 @@
                     x: 0
                 },
                 {
-                    duration: 27,
+                    duration: 35,
                     autoAlpha: 1,
                     x: VD_DESIGN.CALC.X()
                 }, '+=2'
@@ -1236,11 +1418,11 @@
                     scrollTrigger: {
                         trigger: __vdAcc,
                         //markers: true,
-                        start: 'top top',
-                        end: '800px center',
+                        start: '5% top',
+                        end: '10% center',
                         scrub: 0.5,
                     },
-                    color: 'white'
+                    autoAlpha: 0
                 });
 
                 let __vdAccTimeline = gsap.timeline({
@@ -1249,8 +1431,8 @@
                         id: 'vd-acc-remote',
                         trigger: `${__vdAcc} .vd-remote`,
                         //markers: true,
-                        start: "100px top", // when the top of the trigger hits the top of the viewport
-                        end: "bottom 125%", // end after scrolling 500px beyond the start
+                        start: "top top",
+                        end: "bottom 125%",
                         scrub: 0.5,
                         // invalidateOnRefresh: true,
                         //onLeave: () => ScrollTrigger.refresh()
@@ -1301,88 +1483,84 @@
                     }
                 }).call(
                     VD_ACC.REMOTE.LEAVE
-                ).set(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-light`, {
-                    x: 0,
-                    xPercent: -50
-                }).to(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-light`, {
-                    id: 'vd-qled-acc-light',
-                    onStart: () => {
-                        //document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).style.zIndex = 5
-                        document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).classList.remove('vd-action');
-                        document.querySelector(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-light`).classList.remove('vd-hide');
-                    },
-                    // onUpdate:(__this) => {
-                    // console.log('onUpdate light : ', __this);
-                    // document.querySelector(`${__vdAcc} .vd-qled-acc-start .vd-remote-box`).classList.remove('vd-hide');
-                    // document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).removeAttribute('style');
-                    // document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).classList.remove('vd-hide');
-                    // document.querySelector(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-box`).classList.remove('vd-show');
-                    // },
-                    y: 0
-                }).to(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-light .vd-light-on`, {
-                    autoAlpha: 1
-                }).to(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-effect .light-effect01`, {
-                    duration: 1.2,
-                    autoAlpha: 1
-                }, '-=0.7').to(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-effect .light-effect02`, {
-                    duration: 1.2,
-                    autoAlpha: 1
-                }, '-=0.6').to(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-effect .light-effect03`, {
-                    duration: 1.2,
-                    autoAlpha: 1
-                }, '-=0.5').to(`${__vdAcc} .vd-remote-charge .vd-charge11`, {
-                    autoAlpha: 1
-                }, '-=0.6').to(`${__vdAcc} .vd-remote-charge .vd-charge10`, {
-                    autoAlpha: 1
-                }, '-=0.5').to(`${__vdAcc} .vd-remote-charge .vd-charge09`, {
-                    autoAlpha: 1
-                }, '-=0.4').to(`${__vdAcc} .vd-remote-charge .vd-charge08`, {
-                    autoAlpha: 1
-                }, '-=0.3').to(`${__vdAcc} .vd-remote-charge .vd-charge07`, {
-                    autoAlpha: 0.5
-                }, '-=0.2').to(`${__vdAcc} .vd-remote-charge .vd-charge06`, {
-                    autoAlpha: 0.2
-                }, '-=0.1').to(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-effect`, {
-                    autoAlpha: 0
-                }).to(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-light`, {
-                    autoAlpha: 0,
-                    top: -100
-                }, '-=0.5').to(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-box`, {
-                    bottom: VD_ACC.REMOTE.STORY01_BOTTOM()
-                }, '-=0.5').call(
-                    VD_ACC.REMOTE.SCREEN_CHANGE
-                ).to(`${__vdAcc} .vd-qled-acc-story02 [class*="vd-charge-item0"]`, {
-                    onStart: () => {
-                        document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).removeAttribute('style');
-                        document.querySelector(`${__vdAcc} .vd-qled-acc-story02`).style.zIndex = 5;
-                    },
-                    duration: 1.5,
-                    autoAlpha: 1
-                }).fromTo(`${__vdAcc} .vd-qled-acc-story02 .vd-remote-charge .vd-charge07`,
-                    {
-                        autoAlpha: 0.5,
-                    },
-                    {
+                )
+                    // .set(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-light`, {
+                    //     x: 0,
+                    //     xPercent: -50
+                    // }).to(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-light`, {
+                    //     id: 'vd-qled-acc-light',
+                    //     onStart: () => {
+                    //         //document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).style.zIndex = 5
+                    //         document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).classList.remove('vd-action');
+                    //         document.querySelector(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-light`).classList.remove('vd-hide');
+                    //     },
+                    //     y: 0
+                    // }).to(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-light .vd-light-on`, {
+                    //     autoAlpha: 1
+                    // })
+                    .to(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-effect figure`, {
+                        onStart: () => {
+                            document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).classList.remove('vd-action');
+                            document.querySelector(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-light`).classList.remove('vd-hide');
+                        },
+                        duration: 1.2,
+                        autoAlpha: 1
+                    }).to(`${__vdAcc} .vd-remote-charge .vd-charge11`, {
+                        autoAlpha: 1
+                    }, '-=0.6').to(`${__vdAcc} .vd-remote-charge .vd-charge10`, {
+                        autoAlpha: 1
+                    }, '-=0.5').to(`${__vdAcc} .vd-remote-charge .vd-charge09`, {
+                        autoAlpha: 1
+                    }, '-=0.4').to(`${__vdAcc} .vd-remote-charge .vd-charge08`, {
+                        autoAlpha: 1
+                    }, '-=0.3').to(`${__vdAcc} .vd-remote-charge .vd-charge07`, {
+                        autoAlpha: 0.5
+                    }, '-=0.2').to(`${__vdAcc} .vd-remote-charge .vd-charge06`, {
+                        autoAlpha: 0.2
+                    }, '-=0.1').to(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-light`, {
+                        autoAlpha: 1
+                    }, '-=2').to(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-box`, {
+                        bottom: VD_ACC.REMOTE.STORY01_BOTTOM()
+                    }, '-=0.5').to(`${__vdAcc} .vd-qled-acc-story01 .vd-remote-light`, {
+                        autoAlpha: 0
+                    }, '-=0.5').call(
+                        VD_ACC.REMOTE.SCREEN_CHANGE
+                    ).to(`${__vdAcc} .vd-qled-acc-story02 [class*="vd-charge-item0"]`, {
+                        onStart: () => {
+                            document.querySelector(`${__vdAcc} .vd-qled-acc-story01`).removeAttribute('style');
+                            document.querySelector(`${__vdAcc} .vd-qled-acc-story02`).style.zIndex = 5;
+                        },
+                        onUpdate: function () {
+                            const __remoteWrap = document.querySelector(`${__vdAcc} .vd-qled-acc-story02 .vd-acc-remote-wrap`);
+                            if (this.progress() > 0.35 && __remoteWrap.className.indexOf('vd-acc-play') === -1) __remoteWrap.classList.add('vd-acc-play');
+                        },
+                        duration: 1.5,
+                        autoAlpha: 1
+                    }).fromTo(`${__vdAcc} .vd-qled-acc-story02 .vd-remote-charge .vd-charge07`,
+                        {
+                            autoAlpha: 0.5,
+                        },
+                        {
+                            autoAlpha: 1,
+                        }, '-=1'
+                    ).fromTo(`${__vdAcc} .vd-qled-acc-story02 .vd-remote-charge .vd-charge06`,
+                        {
+                            autoAlpha: 0.2,
+                        },
+                        {
+                            autoAlpha: 1,
+                        }, '-=0.9'
+                    ).to(`${__vdAcc} .vd-qled-acc-story02 .vd-remote-charge .vd-charge05`, {
                         autoAlpha: 1,
-                    }, '-=1'
-                ).fromTo(`${__vdAcc} .vd-qled-acc-story02 .vd-remote-charge .vd-charge06`,
-                    {
-                        autoAlpha: 0.2,
-                    },
-                    {
+                    }, '-=0.8').to(`${__vdAcc} .vd-qled-acc-story02 .vd-remote-charge .vd-charge04`, {
                         autoAlpha: 1,
-                    }, '-=0.9'
-                ).to(`${__vdAcc} .vd-qled-acc-story02 .vd-remote-charge .vd-charge05`, {
-                    autoAlpha: 1,
-                }, '-=0.8').to(`${__vdAcc} .vd-qled-acc-story02 .vd-remote-charge .vd-charge04`, {
-                    autoAlpha: 1,
-                }, '-=0.7').to(`${__vdAcc} .vd-qled-acc-story02 .vd-remote-charge .vd-charge03`, {
-                    autoAlpha: 1,
-                }, '-=0.6').to(`${__vdAcc} .vd-qled-acc-story02 .vd-remote-charge .vd-charge02`, {
-                    autoAlpha: 1,
-                }, '-=0.5').to(`${__vdAcc} .vd-qled-acc-story02 .vd-remote-charge .vd-charge01`, {
-                    autoAlpha: 1,
-                }, '-=0.4');
+                    }, '-=0.7').to(`${__vdAcc} .vd-qled-acc-story02 .vd-remote-charge .vd-charge03`, {
+                        autoAlpha: 1,
+                    }, '-=0.6').to(`${__vdAcc} .vd-qled-acc-story02 .vd-remote-charge .vd-charge02`, {
+                        autoAlpha: 1,
+                    }, '-=0.5').to(`${__vdAcc} .vd-qled-acc-story02 .vd-remote-charge .vd-charge01`, {
+                        autoAlpha: 1,
+                    }, '-=0.4');
 
                 // .to(`${__vdAcc} .vd-qled-acc-story02 .vd-charge-item04`, {
                 //     duration: 1.5,
@@ -1405,15 +1583,15 @@
             END: function () {
                 ScrollTrigger.matchMedia({
                     "(min-width: 768px)": function () {
-                        const __vdAccEnd = document.querySelector(`${__vdAcc} .vd-acc-scroll .vd-qled-acc-end.vd-pc-none`);
+                        const __vdAccEnd = document.querySelector(`${__vdAcc} .vd-acc-scroll .vd-qled-acc-end`);
                         __vdAccEnd.removeAttribute('style');
 
                         gsap.to(`${__vdAcc} .vd-qled-acc-end .vd-desc span`, {
                             scrollTrigger: {
                                 trigger: `${__vdAcc} .vd-acc-scroll`,
                                 //markers: true,
-                                start: "top top", // when the top of the trigger hits the top of the viewport
-                                end: "80% center", // end after scrolling 500px beyond the start
+                                start: "top top",
+                                end: "80% center",
                                 scrub: 0.5,
                                 // invalidateOnRefresh: true,
                             },
@@ -1424,27 +1602,27 @@
                         const __vdAccEnd = document.querySelector(`${__vdAcc} .vd-acc-scroll .vd-qled-acc-end.vd-pc-none`);
                         const __vdAccItemList = document.querySelector(`${__vdAcc} .vd-acc-scroll .vd-acc-item-list`);
                         const __marginTop = ((VD_COMMON.ELEM.__WINDOW_HEIGHT - VD_COMMON.ELEM.__FLOATING_NAV.offsetHeight) - __vdAccItemList.offsetHeight) / 2;
-                        __vdAccEnd.style.marginTop = `-${__marginTop}px`;
+                        // __vdAccEnd.style.marginTop = `-${__marginTop}px`;
 
                         // let __vdAccScrollTimeline = gsap.timeline({
                         //     scrollTrigger: {
                         //         id: 'vd-qled-acc-end',
                         //         trigger: `${__vdAcc} .vd-acc-scroll`,
                         //         //markers: true,
-                        //         start: "100px top", // when the top of the trigger hits the top of the viewport
-                        //         end: "bottom 150%", // end after scrolling 500px beyond the start
+                        //         start: "100px top",
+                        //         end: "bottom 150%",
                         //         scrub: 0.5,
                         //         invalidateOnRefresh: true,
                         //     }
                         // });
-                        gsap.set(`${__vdAcc} .vd-acc-scroll .vd-acc-item-list`, { force3D: true, z: 0.1 });
-                        gsap.to(`${__vdAcc} .vd-acc-scroll .vd-acc-item-list`, {
+                        gsap.set(`${__vdAcc} .vd-acc-item-list`, { force3D: true, z: 0.1 });
+                        gsap.to(`${__vdAcc} .vd-acc-item-list`, {
                             scrollTrigger: {
                                 id: 'vd-qled-acc-end',
                                 trigger: `${__vdAcc} .vd-acc-scroll`,
                                 //markers: true,
-                                start: "100px top", // when the top of the trigger hits the top of the viewport
-                                end: "bottom 250%", // end after scrolling 500px beyond the start
+                                start: "100px top",
+                                end: "bottom 250%",
                                 scrub: 0.5,
                                 // invalidateOnRefresh: true,
                                 //onLeave: () => ScrollTrigger.refresh()
@@ -1457,8 +1635,8 @@
                             scrollTrigger: {
                                 trigger: `${__vdAcc} .vd-acc-scroll`,
                                 //markers: true,
-                                start: "70% top", // when the top of the trigger hits the top of the viewport
-                                end: "bottom bottom", // end after scrolling 500px beyond the start
+                                start: "top top",
+                                end: "bottom 250%",
                                 scrub: 0.5,
                                 // invalidateOnRefresh: true,
                             },
@@ -1481,16 +1659,18 @@
                 scrollTrigger: {
                     trigger: __vdOutro,
                     //markers: true,
-                    start: '-100% top',
+                    start: '10% top',
                     end: '70% center',
                     scrub: 0.5,
                 },
+                delay: 1,
                 x: 0
             });
         },
         init: function (__type = 'init') {
-            this.VD_KV_SCROLL();
-            this.VD_SMART_SCROLL();
+            //this.VD_KV_SCROLL();
+            this.VD_SMART_SCROLL2.init();
+            // this.VD_SMART_SCROLL();
             this.VD_QUALITY_SCROLL();
             this.VD_SOUND_SCROLL();
             if (__type === 'init') this.VD_DESIGN_SCROLL();
@@ -1529,7 +1709,7 @@
                 mobile: {
                     slidesPerView: 'auto',
                     watchSlidesVisibility: true,
-                    freeMode: true,
+                    freeMode: false,
                     mousewheel: true,
                 }
             }
@@ -1682,7 +1862,8 @@
 
         VD_COMMON.ELEM.__BEFORE_TIME_STAMP = e.timeStamp;
         if (VD_COMMON.ELEM.__BEFORE_TIME_STAMP !== VD_COMMON.ELEM.__AFTER_TIME_STAMP) {
-            if ((VD_COMMON.ELEM.__BEFORE_TIME_STAMP - VD_COMMON.ELEM.__AFTER_TIME_STAMP) > 1 && VD_COMMON.ELEM.__LAST_KNOWN_SCROLL_POSITION === 0) {
+            // console.log('VD_COMMON.ELEM.__LAST_KNOWN_SCROLL_POSITION  : ', VD_COMMON.ELEM.__LAST_KNOWN_SCROLL_POSITION);
+            if (VD_COMMON.ELEM.__LAST_KNOWN_SCROLL_POSITION === 0 && (VD_COMMON.ELEM.__BEFORE_TIME_STAMP - VD_COMMON.ELEM.__AFTER_TIME_STAMP) < 20) {
                 console.log('scroll : ', (VD_COMMON.ELEM.__BEFORE_TIME_STAMP - VD_COMMON.ELEM.__AFTER_TIME_STAMP));
 
                 clearTimeout(VD_COMMON.ELEM.__TIMER);
@@ -1714,13 +1895,16 @@
         //set Vh
         VD_COMMON.SET.VH();
 
+        //kv scroll down btn
+        VD_KV.SCROLL_BTN();
+
         //text height change
         VD_COMMON.AUTOCHANGE.HEIGHT();
 
         //resize event refresh
         if (VD_COMMON.ELEM.__AFTER_RESIZE_TYPE !== VD_COMMON.ELEM.__BEFORE_RESIZE_TYPE) {
             VD_COMMON.ELEM.__AFTER_RESIZE_TYPE = VD_COMMON.ELEM.__BEFORE_RESIZE_TYPE;
-            console.log('resize!!!');
+            //console.log('resize!!!');
             clearTimeout(VD_COMMON.ELEM.__TIMER);
             VD_COMMON.ELEM.__TIMER = setTimeout(() => {
                 let __allTigger = ScrollTrigger.getAll();
@@ -1731,13 +1915,11 @@
                 VD_SCROLL_TRIGGER.init();
             }, VD_COMMON.ELEM.__DELAY);
 
+            //vd - kv video
+            VD_KV.VIDEO.PLAYED();
+
             //circle set
             VD_SMART.SET.CIRCLE();
-
-            //video end check
-            VD_QUALITY.VIDEO.END();
-            VD_SOUND.VIDEO.END();
-            // VD_DESIGN.VIDEO.END();
 
             //compare slider
             VD_SLIDE.init();
@@ -1764,6 +1946,7 @@
         //init 실행
         [].forEach.call(document.querySelectorAll('.vd-wrap'), (__vdEl) => {
             __vdEl.style.opacity = 1;
+            __vdEl.classList.add('vd-play');
         });
         VD_COMMON.SET.LOW(((Date.now() - __date) / 1000) % 60);
 
@@ -1779,9 +1962,11 @@
         }
 
         VD_COMMON.VIDEO.EVENT();
+        VD_KV.SCROLL_BTN();
         VD_SMART.SET.CIRCLE();
         VD_SCROLL_TRIGGER.init();
         VD_SMART.ACCESSIBILITY();
+        VD_KV.VIDEO.END();
         VD_QUALITY.VIDEO.END();
         VD_SOUND.VIDEO.END();
         // VD_DESIGN.VIDEO.END();
@@ -1794,9 +1979,8 @@
         VD_COMMON.ELEM.__LOAD = true; //resize event 전용
 
         ScrollTrigger.addEventListener("refresh", function () {
-            console.log('refresh!!!');
+            //console.log('refresh!!!');
         });
-
-
     });
+
 })();
