@@ -164,6 +164,23 @@
                 },
             }
         },
+        AUTOCHANGE: {
+            HEIGHT: function () {
+                let __stickyIn = document.querySelectorAll('.vd-sticky-copy .vd-sticky-in');
+
+                [].forEach.call(__stickyIn, (__el) => {
+                    let __stickyEnd = __el.querySelectorAll(`[class$="end"]`);
+                    [].forEach.call(__stickyEnd, (__elEnd) => {
+                        if ((VD_COMMON.ELEM.__WINDOW_HEIGHT - 86) - __elEnd.offsetHeight < 0) {
+                            __el.style.height = `${__elEnd.offsetHeight}px`;
+                            console.log(__el);
+                        } else {
+                            __el.style.height = "calc(100vh - 86px)";
+                        }
+                    });
+                });
+            },
+        },
     };
 
     //vd smart function
@@ -1697,6 +1714,9 @@
         //set Vh
         VD_COMMON.SET.VH();
 
+        //text height change
+        VD_COMMON.AUTOCHANGE.HEIGHT();
+
         //resize event refresh
         if (VD_COMMON.ELEM.__AFTER_RESIZE_TYPE !== VD_COMMON.ELEM.__BEFORE_RESIZE_TYPE) {
             VD_COMMON.ELEM.__AFTER_RESIZE_TYPE = VD_COMMON.ELEM.__BEFORE_RESIZE_TYPE;
@@ -1766,6 +1786,9 @@
         VD_SOUND.VIDEO.END();
         // VD_DESIGN.VIDEO.END();
         VD_SLIDE.init();
+
+        //text height change
+        VD_COMMON.AUTOCHANGE.HEIGHT();
 
         VD_COMMON.ELEM.__LOAD_CHECK = true; //timeline 전용
         VD_COMMON.ELEM.__LOAD = true; //resize event 전용
