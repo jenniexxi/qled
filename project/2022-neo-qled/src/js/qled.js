@@ -177,9 +177,8 @@
                     [].forEach.call(__stickyEnd, (__elEnd) => {
                         if ((VD_COMMON.ELEM.__WINDOW_HEIGHT - 86) - __elEnd.offsetHeight < 0) {
                             __el.style.height = `${__elEnd.offsetHeight}px`;
-                            console.log(__el);
                         } else {
-                            __el.style.height = "calc(100vh - 86px)";
+                            __el.removeAttribute('style');
                         }
                     });
                 });
